@@ -15,23 +15,26 @@
 <body class="d-flex flex-column login-page" @if($darkMode) data-bs-theme="dark" @endif>
 <div class="row g-0 flex-fill">
     <div class="col-12 col-lg-6 col-xl-4 border-top-wide border-primary d-flex flex-column justify-content-center">
+        <div class="position-absolute bottom-0 end-0 p-2 text-muted d-lg-block d-none">
+            <a href="https://github.com/mintopia/aperture-borealis" target="_top" class="text-muted text-decoration-none">
+                Made with <i class="ti ti-heart text-pink"></i> by Mintopia <i class="ti ti-brand-github"></i>
+            </a>
+        </div>
         <div class="container container-tight mt-auto px-lg-5">
             <h1 class="mb-4 text-center">
-                <a href="{{ route('home') }}" class="navbar-brand navbar-brand-autodark">
                     @if($darkMode)
                         @if(App\Models\Setting::fetch('logo-light'))
                             <img src="@setting('logo-light')" alt="@setting('name', config('app.name'))">
                         @else
                             @setting('name', config('app.name'))
                        @endif
+                @else
+                    @if(App\Models\Setting::fetch('logo-dark'))
+                        <img src="@setting('logo-dark')" alt="@setting('name', config('app.name'))">
                     @else
-                        @if(App\Models\Setting::fetch('logo-dark'))
-                            <img src="@setting('logo-dark')" alt="@setting('name', config('app.name'))">
-                        @else
-                            @setting('name', config('app.name'))
-                        @endif
+                        @setting('name', config('app.name'))
                     @endif
-                </a>
+                @endif
             </h1>
             @if (session('successMessage'))
                 <div class="alert alert-success alert-important text-center" role="alert">
