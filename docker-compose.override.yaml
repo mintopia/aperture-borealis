@@ -1,0 +1,9 @@
+services:
+  borealis:
+    networks:
+      - frontend
+      - default
+
+networks:
+  frontend:
+    external: true

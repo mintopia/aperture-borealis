@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Services\SocialProviders\AuthentikProvider;
+use App\Services\SocialProviders\DiscordProvider;
+use App\Services\SocialProviders\LaravelPassportProvider;
+use App\Services\SocialProviders\TwitchProvider;
+use Illuminate\Database\Seeder;
+
+class SocialProvidersSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $classes = [
+            DiscordProvider::class,
+            TwitchProvider::class,
+            LaravelPassportProvider::class,
+            AuthentikProvider::class,
+        ];
+        foreach ($classes as $className) {
+            $provider = new $className;
+            $provider->install();
+            $provider->installSettings();
+        }
+    }
+}

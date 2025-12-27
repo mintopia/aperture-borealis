@@ -1,0 +1,81 @@
+services:
+  control:
+    image: ghcr.io/mintopia/aperture-borealis:develop
+    env_file: .env
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - database
+    volumes:
+      - ./logs:/app/storage/logs
+      - ./public:/app/storage/public
+
+  redis:
+    image: redis:6.2.6
+    restart: unless-stopped
+
+  database:
+    image: mariadb:10.5-focal
+    env_file: .env.mariadb
+    restart: unless-stopped
+    volumes:
+      - ./database:/var/lib/mysql
+
+  horizon:
+    image: ghcr.io/mintopia/aperture-borealis:develop
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - database
+      - redis
+    volumes:
+      - ./logs:/app/storage/logs
+      - ./public:/app/storage/public
+    entrypoint: [ "php", "artisan", "horizon" ]
+    healthcheck:
+        disable: true
+
+
+  scheduler:
+    image: ghcr.io/mintopia/aperture-borealis:develop
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - database
+      - redis
+    volumes:
+      - ./logs:/app/storage/logs
+      - ./public:/app/storage/public
+    entrypoint: [ "php", "artisan", "schedule:work"]
+    healthcheck:
+        disable: true
+
+  artisan:
+    image: ghcr.io/mintopia/aperture-borealis:develop
+    profiles:
+      - artisan
+    env_file: .env
+    depends_on:
+      - database
+      - redis
+    volumes:
+      - ./logs:/app/storage/logs
+      - ./public:/app/storage/public
+    entrypoint: [ "php", "artisan" ]
+    healthcheck:
+      disable: true
+
+  shell:
+    image: ghcr.io/mintopia/aperture-borealis:develop
+    profiles:
+      - shell
+    env_file: .env
+    depends_on:
+      - database
+      - redis
+    volumes:
+      - ./logs:/app/storage/logs
+      - ./public:/app/storage/public
+    entrypoint: [ "/bin/sh" ]
+    healthcheck:
+      disable: true
