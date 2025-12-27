@@ -1,8 +1,16 @@
 name: Publish Docker Images
 
 on:
-  workflow_call:
   workflow_dispatch:
+  push:
+    paths-ignore:
+      - README.md
+      - LICENSE
+      - .env.example
+    branches:
+      - main
+      - develop
+    tags: [ 'v*.*.*' ]
 
 env:
   # Use docker.io for Docker Hub if empty
