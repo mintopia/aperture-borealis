@@ -145,8 +145,8 @@ class SetupProviderCommand extends Command
                         return "<fg=gray>{$setting->name}:</> {$value}";
                     })->filter()->implode(PHP_EOL),
                 implode(PHP_EOL, [
-                    route('login.return', ['socialprovider' => $provider->code]),
-                    route('auth.return', ['socialprovider' => $provider->code]),
+                    route('admin.login.provider.callback', ['provider' => $provider->code]),
+                    route('auth.provider.callback', ['provider' => $provider->code]),
                 ]),
             ];
         }

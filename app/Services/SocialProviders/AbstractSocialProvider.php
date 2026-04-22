@@ -37,10 +37,9 @@ abstract class AbstractSocialProvider implements SocialProviderContract
             return;
         }
         if (Auth::guest() && $this->provider && $this->provider->auth_enabled) {
-            // Probably login
-            $this->redirectUrl = route('login.return', $this->code);
+            $this->redirectUrl = route('admin.login.provider.callback', ['provider' => $this->code]);
         } else {
-            $this->redirectUrl = route('auth.return', $this->code);
+            $this->redirectUrl = route('auth.provider.callback', ['provider' => $this->code]);
         }
     }
 

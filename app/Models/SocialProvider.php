@@ -42,12 +42,12 @@ class SocialProvider extends Model
 
     public function getLoginReturnURI(): string
     {
-        return route('login.return', ['socialprovider' => $this->code]);
+        return route('admin.login.provider.callback', ['provider' => $this->code]);
     }
 
     public function getAuthReturnURI(): string
     {
-        return route('auth.return', ['socialprovider' => $this->code]);
+        return route('auth.provider.callback', ['provider' => $this->code]);
     }
 
     public function configMapping(): array
