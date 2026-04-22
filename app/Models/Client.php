@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Observers\ClientObserver;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[ObservedBy([ClientObserver::class])]
 class Client extends Model implements Authenticatable
 {
+    use HasFactory;
+
     protected function casts(): array
     {
         return [
