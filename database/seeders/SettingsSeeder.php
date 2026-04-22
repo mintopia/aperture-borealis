@@ -19,33 +19,40 @@ class SettingsSeeder extends Seeder
                 'default' => 'Borealis',
                 'validation' => 'required|string|max:200|min:2',
             ],
-            'terms' => (object)[
-                'name' => 'Terms and Conditions URL',
+            'accent_hue' => (object)[
+                'name' => 'Accent Hue',
+                'default' => '55',
+                'validation' => 'required|integer|min:0|max:360',
+            ],
+            'color_mode' => (object)[
+                'name' => 'Color Mode',
+                'default' => 'dark',
+                'validation' => 'required|string|in:light,dark,system',
+            ],
+            'site_title' => (object)[
+                'name' => 'Site Title',
+                'default' => '',
+                'validation' => 'sometimes|nullable|string|max:200',
+            ],
+            'custom_css' => (object)[
+                'name' => 'Custom CSS',
+                'default' => '',
+                'validation' => 'sometimes|nullable|string',
+            ],
+            'terms_url' => (object)[
+                'name' => 'Terms URL',
+                'default' => '',
                 'validation' => 'sometimes|nullable|string|url:http,https',
             ],
-            'privacypolicy' => (object)[
-                'name' => 'Privacy Policy URL',
+            'privacy_url' => (object)[
+                'name' => 'Privacy URL',
+                'default' => '',
                 'validation' => 'sometimes|nullable|string|url:http,https',
             ],
-            'logo-light' => (object)[
-                'name' => 'Site Logo (Light Version)',
-                'validation' => 'sometimes|nullable|string|url:http,https',
-                'description' => 'A light version of the logo for use on dark backgrounds',
-            ],
-            'logo-dark' => (object)[
-                'name' => 'Site Logo (Dark Version)',
-                'validation' => 'sometimes|nullable|string|url:http,https',
-                'description' => 'A dark version of the logo for use on light backgrounds',
-            ],
-            'cover-image' => (object)[
-                'name' => 'Login Cover Image',
-                'validation' => 'sometimes|nullable|string|url:http,https',
-                'description' => 'URL for the large image shown during login and signup',
-            ],
-            'favicon' => (object)[
-                'name' => 'Favicon',
-                'validation' => 'sometimes|nullable|string|url:http,https',
-                'description' => 'URL for a favicon to use',
+            'device_code_expiry' => (object)[
+                'name' => 'Device Code Expiry (seconds)',
+                'default' => '300',
+                'validation' => 'required|integer|min:60|max:3600',
             ],
         ];
         foreach ($settings as $code => $setting) {

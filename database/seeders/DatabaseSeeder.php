@@ -14,6 +14,5 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(SocialProvidersSeeder::class);
         $this->call(SettingsSeeder::class);
-        $this->call(ThemesSeeder::class);
     }
 }
