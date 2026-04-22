@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-Borealis will be migrated in a single cut from its current Blade + Bootstrap/Tabler frontend to a Vue 3 + Inertia.js + Tailwind CSS 4 application running inside Laravel 12. This is not a progressive enhancement project and not a hybrid Blade/Inertia transition. The target state is a clean replacement: legacy Blade templates, Bootstrap assets, Tabler dependencies, and theme-specific legacy frontend structures are removed and replaced in one coordinated pass.
+Borealis will be migrated in a single cut from its current Blade + Bootstrap/Tabler frontend to a Vue 3 + Inertia.js + Tailwind CSS 4 application running inside Laravel 13 (upgraded from 12). This is not a progressive enhancement project and not a hybrid Blade/Inertia transition. The target state is a clean replacement: legacy Blade templates, Bootstrap assets, Tabler dependencies, and theme-specific legacy frontend structures are removed and replaced in one coordinated pass.
 
 The migration preserves Borealis' core backend domain model and business logic, including:
 
@@ -52,7 +52,7 @@ The following are explicitly out of scope for this migration and must not expand
 
 ### 3.1 Target Stack
 
-- **Backend:** Laravel 12, PHP 8.2+
+- **Backend:** Laravel 13 (upgraded from 12), PHP 8.3+
 - **Frontend:** Vue 3, Inertia.js 2, Tailwind CSS 4
 - **Bundler:** Vite
 - **Vite plugins:** `@vitejs/plugin-vue`, `@tailwindcss/vite`
@@ -69,8 +69,13 @@ The following are explicitly out of scope for this migration and must not expand
 
 #### Composer
 
+- `laravel/framework:^13.0` (upgrade from ^12.0)
 - `inertiajs/inertia-laravel`
 - `laragear/webauthn`
+
+#### Composer (dev)
+
+- `laravel/boost` — AI-assisted development MCP server with Laravel-specific guidelines and context
 
 ### 3.3 Packages to Remove
 
@@ -82,7 +87,20 @@ The following are explicitly out of scope for this migration and must not expand
 - `sass-embedded`
 - `popperjs/core`
 
-### 3.4 Build Requirements
+### 3.4 Laravel 13 Upgrade
+
+The project must be upgraded from Laravel 12 to Laravel 13 as part of this migration. Key upgrade steps:
+
+1. **PHP version:** Require PHP 8.3+ (Laravel 13 drops PHP 8.2 support).
+2. **Framework version:** Update `laravel/framework` constraint to `^13.0` in `composer.json`.
+3. **Related packages:** Update `laravel/tinker`, `phpunit/phpunit` (^12.0) or `pestphp/pest` (^4.0) if present.
+4. **Session/cache prefixes:** Explicitly set `CACHE_PREFIX` and `SESSION_COOKIE` in `.env` to prevent invalidation (Laravel 13 changes default naming from snake_case to kebab-case).
+5. **Pagination view names:** Review any explicit paginator view references — default names have changed.
+6. **Post-upgrade:** Run `php artisan boost:install` to generate AI development configuration files after installing `laravel/boost`.
+
+Laravel 13 has near-zero breaking changes. The upgrade should be performed as the first implementation step to establish the target framework version before building new features.
+
+### 3.5 Build Requirements
 
 - Vite must compile the Vue/Inertia entrypoint from `resources/js/app.js`.
 - Tailwind must be loaded from `resources/css/app.css` using Tailwind CSS 4 conventions.
