@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -30,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->setupViews();
         $this->setupAuthentication();
         $this->bindSocialiteEvents();
     }
@@ -45,13 +43,6 @@ class AppServiceProvider extends ServiceProvider
                 return $client;
             }
             return null;
-        });
-    }
-
-    protected function setupViews(): void
-    {
-        Blade::directive('setting', function (string $expression, $default = null) {
-            return "<?php echo App\Models\Setting::fetch($expression, $default); ?>";
         });
     }
 
