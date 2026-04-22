@@ -7,15 +7,18 @@ use App\Models\Traits\ToString;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laragear\WebAuthn\Contracts\WebAuthnAuthenticatable as WebAuthnAuthenticatableContract;
+use Laragear\WebAuthn\WebAuthnAuthentication;
 
 /**
  * @mixin IdeHelperUser
  */
-class User extends Authenticatable
+class User extends Authenticatable implements WebAuthnAuthenticatableContract
 {
     use HasFactory;
     use Notifiable;
     use ToString;
+    use WebAuthnAuthentication;
 
     protected $fillable = [
         'nickname',
@@ -45,6 +48,7 @@ class User extends Authenticatable
             'access_token_expires_at' => 'datetime',
             'last_login_at' => 'datetime',
             'is_admin' => 'boolean',
+            'password' => 'hashed',
         ];
     }
 
