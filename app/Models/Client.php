@@ -17,6 +17,15 @@ class Client extends Model implements Authenticatable
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'enabled',
+        'interval',
+        'expires_in',
+        'client_id',
+        'client_secret',
+    ];
+
     protected function casts(): array
     {
         return [
