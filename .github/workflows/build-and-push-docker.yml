@@ -73,7 +73,7 @@ jobs:
         run: vendor/bin/pint --test --format agent
 
       - name: PHPUnit (tests + coverage)
-        run: XDEBUG_MODE=coverage php artisan test --parallel --compact --coverage-clover=storage/coverage/php/clover.xml
+        run: XDEBUG_MODE=coverage php artisan test --compact --coverage-clover=storage/coverage/php/clover.xml
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ':memory:'
