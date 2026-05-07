@@ -55,7 +55,8 @@ class LoginController extends Controller
         $socialProvider = SocialProvider::where('code', $provider)->where('enabled', true)->firstOrFail();
 
         try {
-            $socialUser = $socialProvider->getProvider()->getSocialiteProvider()->user();
+            $redirectUrl = route('admin.login.provider.callback', ['provider' => $provider]);
+            $socialUser = $socialProvider->getProvider($redirectUrl)->getSocialiteProvider()->user();
         } catch (\Exception $e) {
             return redirect()->route('admin.login')->with('error', 'Authentication failed. Please try again.');
         }
