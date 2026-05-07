@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->prefix('oauth2')
                 ->name('oauth2.')
                 ->group(base_path('routes/oauth2.php'));
+
+            Route::group([], base_path('routes/ipv6.php'));
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {
