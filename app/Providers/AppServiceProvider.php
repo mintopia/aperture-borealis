@@ -5,13 +5,7 @@ namespace App\Providers;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use SocialiteProviders\Authentik\Provider as AuthentikProvider;
-use SocialiteProviders\Discord\Provider as DiscordProvider;
-use SocialiteProviders\LaravelPassport\Provider as LaravelPassportProvider;
-use SocialiteProviders\Manager\SocialiteWasCalled;
-use SocialiteProviders\Twitch\Provider as TwitchProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->setupAuthentication();
-        $this->bindSocialiteEvents();
     }
 
     protected function setupAuthentication(): void
@@ -43,16 +36,6 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return null;
-        });
-    }
-
-    protected function bindSocialiteEvents(): void
-    {
-        Event::listen(function (SocialiteWasCalled $event) {
-            $event->extendSocialite('discord', DiscordProvider::class);
-            $event->extendSocialite('twitch', TwitchProvider::class);
-            $event->extendSocialite('laravelpassport', LaravelPassportProvider::class);
-            $event->extendSocialite('authentik', AuthentikProvider::class);
         });
     }
 }

@@ -35,6 +35,10 @@ export function useTheme() {
         }
     }
 
+    function toggleMode() {
+        setMode(effectiveMode.value === 'dark' ? 'light' : 'dark');
+    }
+
     function setAccentHue(hue) {
         accentHue.value = hue;
         applyTheme();
@@ -51,6 +55,7 @@ export function useTheme() {
         effectiveMode,
         accentHue,
         setMode,
+        toggleMode,
         setAccentHue,
     };
 }

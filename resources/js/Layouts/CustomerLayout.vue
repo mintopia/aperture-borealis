@@ -1,6 +1,7 @@
 <script setup>
 import { usePage, Head } from '@inertiajs/vue3';
 import { useTheme } from '@/Composables/useTheme';
+import AppLogo from '@/Components/AppLogo.vue';
 
 const page = usePage();
 const { effectiveMode } = useTheme();
@@ -14,10 +15,8 @@ const legal = page.props.legal || {};
         <Head :title="$page.props.title ?? ''" />
 
         <div class="w-full max-w-[420px]">
-            <div v-if="theme.site_title" class="mb-8 text-center">
-                <h1 class="font-heading text-xl font-bold text-[var(--color-text)]">
-                    {{ theme.site_title }}
-                </h1>
+            <div class="mb-8 flex justify-center">
+                <AppLogo class="text-xl" />
             </div>
 
             <slot />
