@@ -12,10 +12,10 @@ defineProps({
 <template>
     <div class="text-center">
         <h2 class="font-heading text-2xl font-bold text-[var(--color-text)] mb-2">
-            Choose Provider
+            Sign In
         </h2>
         <p class="text-[var(--color-text-secondary)] text-sm mb-8">
-            Select an account to link
+            Choose an account to continue
         </p>
 
         <div class="space-y-3">

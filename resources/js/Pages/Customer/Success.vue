@@ -11,10 +11,10 @@ defineOptions({ layout: CustomerLayout });
         </div>
 
         <h2 class="font-heading text-2xl font-bold text-[var(--color-text)] mb-2">
-            Account Linked
+            Connected
         </h2>
         <p class="text-[var(--color-text-secondary)] text-sm">
-            You can close this window and return to your application.
+            You're all set. You can close this window now.
         </p>
     </div>
 </template>

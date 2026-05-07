@@ -16,10 +16,10 @@ function onCodeComplete(code) {
 <template>
     <div class="text-center">
         <h2 class="font-heading text-2xl font-bold text-[var(--color-text)] mb-2">
-            Link Your Account
+            Connect to Network
         </h2>
         <p class="text-[var(--color-text-secondary)] text-sm mb-8">
-            Enter the code shown on your screen
+            Enter the code displayed on your device
         </p>
 
         <CodeInput
