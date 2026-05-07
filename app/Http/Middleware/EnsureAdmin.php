@@ -10,11 +10,11 @@ class EnsureAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user()) {
+        if (! $request->user()) {
             return redirect()->route('admin.login');
         }
 
-        if (!$request->user()->is_admin) {
+        if (! $request->user()->is_admin) {
             abort(403);
         }
 

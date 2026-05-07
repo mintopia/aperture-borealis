@@ -14,42 +14,42 @@ class SettingsSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            'name' => (object)[
+            'name' => (object) [
                 'name' => 'Site Name',
                 'default' => 'Borealis',
                 'validation' => 'required|string|max:200|min:2',
             ],
-            'accent_hue' => (object)[
+            'accent_hue' => (object) [
                 'name' => 'Accent Hue',
                 'default' => '55',
                 'validation' => 'required|integer|min:0|max:360',
             ],
-            'color_mode' => (object)[
+            'color_mode' => (object) [
                 'name' => 'Color Mode',
                 'default' => 'dark',
                 'validation' => 'required|string|in:light,dark,system',
             ],
-            'site_title' => (object)[
+            'site_title' => (object) [
                 'name' => 'Site Title',
                 'default' => '',
                 'validation' => 'sometimes|nullable|string|max:200',
             ],
-            'custom_css' => (object)[
+            'custom_css' => (object) [
                 'name' => 'Custom CSS',
                 'default' => '',
                 'validation' => 'sometimes|nullable|string',
             ],
-            'terms_url' => (object)[
+            'terms_url' => (object) [
                 'name' => 'Terms URL',
                 'default' => '',
                 'validation' => 'sometimes|nullable|string|url:http,https',
             ],
-            'privacy_url' => (object)[
+            'privacy_url' => (object) [
                 'name' => 'Privacy URL',
                 'default' => '',
                 'validation' => 'sometimes|nullable|string|url:http,https',
             ],
-            'device_code_expiry' => (object)[
+            'device_code_expiry' => (object) [
                 'name' => 'Device Code Expiry (seconds)',
                 'default' => '300',
                 'validation' => 'required|integer|min:60|max:3600',
@@ -63,8 +63,8 @@ class SettingsSeeder extends Seeder
     protected function updateSetting(string $code, object $data): void
     {
         $setting = Setting::whereCode($code)->first();
-        if (!$setting) {
-            $setting = new Setting();
+        if (! $setting) {
+            $setting = new Setting;
             $setting->code = $code;
             $setting->value = $data->default ?? null;
         }

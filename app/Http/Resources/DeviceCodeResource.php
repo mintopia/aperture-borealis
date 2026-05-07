@@ -6,7 +6,6 @@ use App\Models\DeviceCode;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Ramsey\Uuid\Uuid;
 
 /**
  * @mixin DeviceCode
@@ -14,6 +13,7 @@ use Ramsey\Uuid\Uuid;
 class DeviceCodeResource extends JsonResource
 {
     public static $wrap = null;
+
     /**
      * Transform the resource into an array.
      *

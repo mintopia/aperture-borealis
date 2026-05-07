@@ -20,8 +20,8 @@ use Spatie\EloquentSortable\SortableTrait;
 #[ObservedBy([SettingObserver::class])]
 class Setting extends Model implements Sortable
 {
-    use ToString;
     use SortableTrait;
+    use ToString;
 
     protected static array $cached = [];
 
@@ -37,6 +37,7 @@ class Setting extends Model implements Sortable
     {
         if (isset(static::$cached[$code])) {
             Log::debug("Fetched settings.{$code} from setting cache");
+
             return static::$cached[$code];
         }
         $key = "settings.{$code}";
@@ -47,9 +48,11 @@ class Setting extends Model implements Sortable
             }
             if ($setting->encrypted) {
                 static::$cached[$code] = $setting->value;
+
                 return Crypt::decrypt($setting->value);
             }
             static::$cached[$code] = $setting->value;
+
             return $setting->value;
         }
         $setting = Setting::whereCode($code)->first();
@@ -57,16 +60,18 @@ class Setting extends Model implements Sortable
         if ($setting === null) {
             Cache::put($key, $setting);
             static::$cached[$code] = null;
+
             return $default;
         }
         Cache::put($key, $setting->getValue());
         static::$cached[$code] = $setting->value;
+
         return $setting->value ?? $default;
     }
 
     public function getValue()
     {
-        return (object)[
+        return (object) [
             'code' => $this->code,
             'encrypted' => $this->encrypted,
             'value' => $this->encrypted ? Crypt::encrypt($this->value) : $this->value,

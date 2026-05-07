@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\Admin\Auth;
 
+use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\Auth\LogoutController;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -18,11 +21,11 @@ class LoginTest extends TestCase
 
         // Register temporary routes for testing
         Route::middleware('web')->group(function () {
-            Route::get('/admin/login', [\App\Http\Controllers\Admin\Auth\LoginController::class, 'showLogin'])->name('admin.login');
-            Route::post('/admin/login', [\App\Http\Controllers\Admin\Auth\LoginController::class, 'passwordLogin']);
-            Route::post('/admin/logout', [\App\Http\Controllers\Admin\Auth\LogoutController::class, 'logout'])->name('admin.logout');
+            Route::get('/admin/login', [LoginController::class, 'showLogin'])->name('admin.login');
+            Route::post('/admin/login', [LoginController::class, 'passwordLogin']);
+            Route::post('/admin/logout', [LogoutController::class, 'logout'])->name('admin.logout');
             Route::get('/admin', function () {
-                return \Inertia\Inertia::render('Admin/Dashboard');
+                return Inertia::render('Admin/Dashboard');
             })->name('admin.dashboard');
         });
 

@@ -19,7 +19,7 @@ class PasskeyController extends Controller
     {
         $user = $request->login();
 
-        if (!$user || !$user->is_admin) {
+        if (! $user || ! $user->is_admin) {
             abort(403, "You don't have admin access.");
         }
 

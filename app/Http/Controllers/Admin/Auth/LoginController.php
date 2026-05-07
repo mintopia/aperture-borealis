@@ -31,7 +31,7 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt([
+        if (! Auth::attempt([
             'email' => $request->email,
             'password' => $request->password,
             'is_admin' => true,
@@ -65,7 +65,7 @@ class LoginController extends Controller
             ->where('social_provider_id', $socialProvider->id)
             ->first();
 
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
                 'nickname' => $socialUser->getNickname() ?? $socialUser->getName(),
                 'email' => $socialUser->getEmail(),
@@ -83,7 +83,7 @@ class LoginController extends Controller
             ]);
         }
 
-        if (!$user->is_admin) {
+        if (! $user->is_admin) {
             return redirect()->route('admin.login')->with('error', "You don't have admin access.");
         }
 

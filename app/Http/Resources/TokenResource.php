@@ -13,6 +13,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class TokenResource extends JsonResource
 {
     public static $wrap = null;
+
     /**
      * Transform the resource into an array.
      *
@@ -25,7 +26,7 @@ class TokenResource extends JsonResource
             'refresh_token' => $this->refresh_token,
             'token_type' => 'bearer',
             'expires_in' => round(CarbonImmutable::now()->diffInSeconds($this->access_token_expires_at)),
-            'user' => (object)[
+            'user' => (object) [
                 'id' => $this->external_id,
                 'nickname' => $this->nickname,
                 'email' => $this->email,

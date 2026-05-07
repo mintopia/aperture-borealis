@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Helper\TableSeparator;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
@@ -53,6 +54,7 @@ class SetupProviderCommand extends Command
         });
 
         $this->displayProviders();
+
         return self::SUCCESS;
     }
 
@@ -83,6 +85,7 @@ class SetupProviderCommand extends Command
             if ($newValue === '') {
                 return $setting->value;
             }
+
             return $newValue;
         } else {
             return text(
@@ -106,6 +109,7 @@ class SetupProviderCommand extends Command
         if ($code === 'none') {
             return null;
         }
+
         return $providers->where('code', $code)->first();
     }
 
@@ -121,7 +125,7 @@ class SetupProviderCommand extends Command
         $rows = [];
         foreach ($providers as $i => $provider) {
             if ($i > 0) {
-                $rows[] = new TableSeparator();
+                $rows[] = new TableSeparator;
             }
             $rows[] = [
                 $provider->name,
@@ -142,6 +146,7 @@ class SetupProviderCommand extends Command
                         if ($value === null) {
                             $value = '<fg=gray>None</>';
                         }
+
                         return "<fg=gray>{$setting->name}:</> {$value}";
                     })->filter()->implode(PHP_EOL),
                 implode(PHP_EOL, [

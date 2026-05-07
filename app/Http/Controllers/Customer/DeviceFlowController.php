@@ -27,7 +27,7 @@ class DeviceFlowController extends Controller
             ->where('expires_at', '>', now())
             ->first();
 
-        if (!$deviceCode) {
+        if (! $deviceCode) {
             return back()->withErrors(['code' => 'Invalid or expired code. Please try again.']);
         }
 
@@ -40,14 +40,15 @@ class DeviceFlowController extends Controller
     {
         $deviceCodeId = $request->session()->get('device_code_id');
 
-        if (!$deviceCodeId) {
+        if (! $deviceCodeId) {
             return redirect('/auth');
         }
 
         $deviceCode = DeviceCode::find($deviceCodeId);
 
-        if (!$deviceCode || $deviceCode->status !== DeviceCodeStatus::dcsPending || $deviceCode->expires_at <= now()) {
+        if (! $deviceCode || $deviceCode->status !== DeviceCodeStatus::dcsPending || $deviceCode->expires_at <= now()) {
             $request->session()->forget('device_code_id');
+
             return redirect('/auth/error')->with('reason', 'expired');
         }
 
@@ -65,14 +66,15 @@ class DeviceFlowController extends Controller
     {
         $deviceCodeId = $request->session()->get('device_code_id');
 
-        if (!$deviceCodeId) {
+        if (! $deviceCodeId) {
             return redirect('/auth');
         }
 
         $deviceCode = DeviceCode::find($deviceCodeId);
 
-        if (!$deviceCode || $deviceCode->status !== DeviceCodeStatus::dcsPending || $deviceCode->expires_at <= now()) {
+        if (! $deviceCode || $deviceCode->status !== DeviceCodeStatus::dcsPending || $deviceCode->expires_at <= now()) {
             $request->session()->forget('device_code_id');
+
             return redirect('/auth/error')->with('reason', 'expired');
         }
 
@@ -85,14 +87,15 @@ class DeviceFlowController extends Controller
     {
         $deviceCodeId = $request->session()->get('device_code_id');
 
-        if (!$deviceCodeId) {
+        if (! $deviceCodeId) {
             return redirect('/auth/error')->with('reason', 'session');
         }
 
         $deviceCode = DeviceCode::find($deviceCodeId);
 
-        if (!$deviceCode || $deviceCode->status !== DeviceCodeStatus::dcsPending || $deviceCode->expires_at <= now()) {
+        if (! $deviceCode || $deviceCode->status !== DeviceCodeStatus::dcsPending || $deviceCode->expires_at <= now()) {
             $request->session()->forget('device_code_id');
+
             return redirect('/auth/error')->with('reason', 'invalid');
         }
 
@@ -101,11 +104,13 @@ class DeviceFlowController extends Controller
             $socialProvider->getProvider()->code($deviceCode);
 
             $request->session()->forget('device_code_id');
+
             return redirect('/auth/success');
         } catch (\Exception $e) {
             $deviceCode->status = DeviceCodeStatus::dcsFailed;
             $deviceCode->save();
             $request->session()->forget('device_code_id');
+
             return redirect('/auth/error')->with('reason', 'auth_failed');
         }
     }

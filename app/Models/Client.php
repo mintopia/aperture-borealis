@@ -32,6 +32,7 @@ class Client extends Model implements Authenticatable
             'client_secret' => 'encrypted',
         ];
     }
+
     public function codes(): HasMany
     {
         return $this->hasMany(DeviceCode::class);

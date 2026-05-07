@@ -6,9 +6,6 @@ use App\Enums\DeviceCodeStatus;
 use App\Enums\SettingType;
 use App\Exceptions\SocialProviderException;
 use App\Models\DeviceCode;
-use App\Models\EmailAddress;
-use App\Models\LinkedAccount;
-use App\Models\ProviderSetting;
 use App\Models\SocialProvider;
 use App\Models\SocialProviderSetting;
 use App\Models\User;
@@ -23,7 +20,9 @@ use Laravel\Socialite\Facades\Socialite;
 abstract class AbstractSocialProvider implements SocialProviderContract
 {
     protected string $name;
+
     protected string $code;
+
     protected string $socialiteProviderCode;
 
     public function __construct(protected ?SocialProvider $provider = null, protected ?string $redirectUrl = null)
@@ -49,10 +48,11 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         if ($this->provider) {
             // Ensure settings exist/are up-to-date for existing provider (idempotent)
             $this->installSettings();
+
             return $this->provider;
         }
 
-        $provider = new SocialProvider();
+        $provider = new SocialProvider;
         $this->provider = $provider;
         $provider->name = $this->name;
         $provider->code = $this->code;
@@ -73,8 +73,8 @@ abstract class AbstractSocialProvider implements SocialProviderContract
     {
         foreach ($this->configMapping() as $code => $config) {
             $setting = $this->provider->settings()->whereCode($code)->first();
-            if (!$setting) {
-                $setting = new SocialProviderSetting();
+            if (! $setting) {
+                $setting = new SocialProviderSetting;
                 $setting->provider()->associate($this->provider);
                 $setting->code = $code;
                 // Only set value initially
@@ -94,11 +94,11 @@ abstract class AbstractSocialProvider implements SocialProviderContract
     public function configMapping(): array
     {
         return [
-            'client_id' => (object)[
+            'client_id' => (object) [
                 'name' => 'Client ID',
                 'validation' => 'required|string',
             ],
-            'client_secret' => (object)[
+            'client_secret' => (object) [
                 'name' => 'Client Secret',
                 'validation' => 'required|string',
                 'encrypted' => true,
@@ -120,6 +120,7 @@ abstract class AbstractSocialProvider implements SocialProviderContract
     {
         $remoteUser = $this->getSocialiteProvider()->user();
         $this->updateDeviceCode($deviceCode, $remoteUser);
+
         return $deviceCode;
     }
 
@@ -134,11 +135,11 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         }
 
         // Find the email
-        if (!$user) {
+        if (! $user) {
             $user = User::whereEmail($remoteUser->getEmail())->first();
         }
 
-        if (!$user) {
+        if (! $user) {
             throw new SocialProviderException('You do not have access to this application');
         }
 
@@ -147,13 +148,14 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         }
 
         if ($user === null) {
-            $localUser = new User();
+            $localUser = new User;
             $localUser->nickname = $remoteUser->getNickname();
             $localUser->save();
         }
 
         $this->updateUser($user, $remoteUser);
         $user->save();
+
         return $user;
     }
 

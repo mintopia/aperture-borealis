@@ -6,7 +6,6 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Authentik\Provider as AuthentikProvider;
 use SocialiteProviders\Discord\Provider as DiscordProvider;
@@ -42,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
             if ($client && $client->client_secret === $request->input('client_secret')) {
                 return $client;
             }
+
             return null;
         });
     }

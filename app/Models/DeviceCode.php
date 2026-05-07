@@ -61,6 +61,7 @@ class DeviceCode extends Model
         if ($complete) {
             $params['code'] = $this->user_code;
         }
+
         return route('auth', $params);
     }
 
@@ -70,6 +71,7 @@ class DeviceCode extends Model
             return $this->avatar_url;
         }
         $hash = hash('sha256', strtolower(trim($this->email) ?? ''));
+
         return "https://www.gravatar.com/avatar/{$hash}?d=mp";
     }
 }

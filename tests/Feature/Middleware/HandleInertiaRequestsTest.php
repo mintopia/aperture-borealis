@@ -2,8 +2,9 @@
 
 namespace Tests\Feature\Middleware;
 
-use App\Models\Setting;
+use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class HandleInertiaRequestsTest extends TestCase
@@ -14,8 +15,8 @@ class HandleInertiaRequestsTest extends TestCase
     {
         $this->seed();
 
-        $middleware = new \App\Http\Middleware\HandleInertiaRequests();
-        $request = \Illuminate\Http\Request::create('/');
+        $middleware = new HandleInertiaRequests;
+        $request = Request::create('/');
         $request->setLaravelSession(session()->driver());
 
         $shared = $middleware->share($request);

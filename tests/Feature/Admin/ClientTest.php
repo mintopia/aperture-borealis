@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Models\User;
+use App\Http\Controllers\Admin\ClientController;
+use App\Http\Middleware\EnsureAdmin;
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
@@ -18,15 +21,15 @@ class ClientTest extends TestCase
         $this->seed();
 
         Route::middleware('web')->group(function () {
-            Route::get('/admin/login', fn () => \Inertia\Inertia::render('Admin/Login'))->name('admin.login');
+            Route::get('/admin/login', fn () => Inertia::render('Admin/Login'))->name('admin.login');
         });
-        Route::middleware(['web', \App\Http\Middleware\EnsureAdmin::class])->group(function () {
-            Route::get('/admin/clients', [\App\Http\Controllers\Admin\ClientController::class, 'index']);
-            Route::get('/admin/clients/create', [\App\Http\Controllers\Admin\ClientController::class, 'create']);
-            Route::post('/admin/clients', [\App\Http\Controllers\Admin\ClientController::class, 'store']);
-            Route::get('/admin/clients/{client}', [\App\Http\Controllers\Admin\ClientController::class, 'show']);
-            Route::put('/admin/clients/{client}', [\App\Http\Controllers\Admin\ClientController::class, 'update']);
-            Route::delete('/admin/clients/{client}', [\App\Http\Controllers\Admin\ClientController::class, 'destroy']);
+        Route::middleware(['web', EnsureAdmin::class])->group(function () {
+            Route::get('/admin/clients', [ClientController::class, 'index']);
+            Route::get('/admin/clients/create', [ClientController::class, 'create']);
+            Route::post('/admin/clients', [ClientController::class, 'store']);
+            Route::get('/admin/clients/{client}', [ClientController::class, 'show']);
+            Route::put('/admin/clients/{client}', [ClientController::class, 'update']);
+            Route::delete('/admin/clients/{client}', [ClientController::class, 'destroy']);
         });
         Route::getRoutes()->refreshNameLookups();
         $this->app['url']->setRoutes(Route::getRoutes());

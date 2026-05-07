@@ -9,7 +9,7 @@ use App\Models\SocialProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\DeviceCode>
+ * @extends Factory<DeviceCode>
  */
 class DeviceCodeFactory extends Factory
 {

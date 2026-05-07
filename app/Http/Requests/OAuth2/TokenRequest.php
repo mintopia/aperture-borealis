@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\OAuth2;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ class TokenRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -35,7 +36,7 @@ class TokenRequest extends FormRequest
                 Rule::exists('device_codes', 'device_code')->where(function (Builder $query) {
                     $query->where('client_id', Auth::user()->id);
                 }),
-            ]
+            ],
         ];
     }
 }

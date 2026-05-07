@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+
 use function Laravel\Prompts\text;
 
 class AddUserCommand extends Command
@@ -39,7 +40,7 @@ class AddUserCommand extends Command
             validate: 'email|unique:users,email',
             hint: 'The email address for the user'
         );
-        $user = new User();
+        $user = new User;
         $user->nickname = $nickname;
         $user->email = $email;
         $user->save();

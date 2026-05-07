@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Admin\Settings;
 
-use App\Models\User;
+use App\Http\Controllers\Admin\Settings\ThemeController;
+use App\Http\Middleware\EnsureAdmin;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Tests\TestCase;
 
 class ThemeSettingsTest extends TestCase
@@ -18,11 +21,11 @@ class ThemeSettingsTest extends TestCase
         $this->seed();
 
         Route::middleware('web')->group(function () {
-            Route::get('/admin/login', fn () => \Inertia\Inertia::render('Admin/Login'))->name('admin.login');
+            Route::get('/admin/login', fn () => Inertia::render('Admin/Login'))->name('admin.login');
         });
-        Route::middleware(['web', \App\Http\Middleware\EnsureAdmin::class])->group(function () {
-            Route::get('/admin/settings/theme', [\App\Http\Controllers\Admin\Settings\ThemeController::class, 'show']);
-            Route::put('/admin/settings/theme', [\App\Http\Controllers\Admin\Settings\ThemeController::class, 'update']);
+        Route::middleware(['web', EnsureAdmin::class])->group(function () {
+            Route::get('/admin/settings/theme', [ThemeController::class, 'show']);
+            Route::put('/admin/settings/theme', [ThemeController::class, 'update']);
         });
         Route::getRoutes()->refreshNameLookups();
         $this->app['url']->setRoutes(Route::getRoutes());

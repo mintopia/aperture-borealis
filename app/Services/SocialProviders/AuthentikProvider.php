@@ -10,8 +10,11 @@ use SocialiteProviders\Manager\Config;
 class AuthentikProvider extends AbstractSocialProvider
 {
     protected string $name = 'Authentik';
+
     protected string $code = 'authentik';
+
     protected string $socialiteProviderCode = 'authentik';
+
     public function __construct(?SocialProvider $provider = null, ?string $redirectUrl = null)
     {
         parent::__construct($provider, $redirectUrl);
@@ -25,7 +28,7 @@ class AuthentikProvider extends AbstractSocialProvider
         return array_merge(
             parent::configMapping(),
             [
-                'host' => (object)[
+                'host' => (object) [
                     'name' => 'Authentik Base URL',
                     'validation' => 'required|string',
                 ],
@@ -41,6 +44,7 @@ class AuthentikProvider extends AbstractSocialProvider
             $this->redirectUrl,
             ['host' => $this->provider->getSetting('host')]
         );
+
         return Socialite::buildProvider(Provider::class, $config->get())
             ->setConfig($config)->with(['prompt' => 'none']);
     }

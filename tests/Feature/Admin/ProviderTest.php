@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Models\User;
+use App\Http\Controllers\Admin\ProviderController;
+use App\Http\Middleware\EnsureAdmin;
 use App\Models\SocialProvider;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Tests\TestCase;
 
 class ProviderTest extends TestCase
@@ -18,11 +21,11 @@ class ProviderTest extends TestCase
         $this->seed();
 
         Route::middleware('web')->group(function () {
-            Route::get('/admin/login', fn () => \Inertia\Inertia::render('Admin/Login'))->name('admin.login');
+            Route::get('/admin/login', fn () => Inertia::render('Admin/Login'))->name('admin.login');
         });
-        Route::middleware(['web', \App\Http\Middleware\EnsureAdmin::class])->group(function () {
-            Route::get('/admin/providers', [\App\Http\Controllers\Admin\ProviderController::class, 'index']);
-            Route::put('/admin/providers/{provider}', [\App\Http\Controllers\Admin\ProviderController::class, 'update']);
+        Route::middleware(['web', EnsureAdmin::class])->group(function () {
+            Route::get('/admin/providers', [ProviderController::class, 'index']);
+            Route::put('/admin/providers/{provider}', [ProviderController::class, 'update']);
         });
         Route::getRoutes()->refreshNameLookups();
         $this->app['url']->setRoutes(Route::getRoutes());
@@ -63,7 +66,7 @@ class ProviderTest extends TestCase
 
         $this->actingAs($user)
             ->put("/admin/providers/{$provider->id}", [
-                'enabled' => !$provider->enabled,
+                'enabled' => ! $provider->enabled,
             ])
             ->assertRedirect();
     }

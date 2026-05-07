@@ -3,8 +3,8 @@
 namespace Tests\Feature\Customer;
 
 use App\Enums\DeviceCodeStatus;
+use App\Http\Controllers\Customer\DeviceFlowController;
 use App\Models\DeviceCode;
-use App\Models\SocialProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
@@ -19,11 +19,11 @@ class DeviceFlowTest extends TestCase
         $this->seed();
 
         Route::middleware('web')->group(function () {
-            Route::get('/auth', [\App\Http\Controllers\Customer\DeviceFlowController::class, 'code']);
-            Route::post('/auth', [\App\Http\Controllers\Customer\DeviceFlowController::class, 'submitCode']);
-            Route::get('/auth/providers', [\App\Http\Controllers\Customer\DeviceFlowController::class, 'providers']);
-            Route::get('/auth/success', [\App\Http\Controllers\Customer\DeviceFlowController::class, 'success']);
-            Route::get('/auth/error', [\App\Http\Controllers\Customer\DeviceFlowController::class, 'error']);
+            Route::get('/auth', [DeviceFlowController::class, 'code']);
+            Route::post('/auth', [DeviceFlowController::class, 'submitCode']);
+            Route::get('/auth/providers', [DeviceFlowController::class, 'providers']);
+            Route::get('/auth/success', [DeviceFlowController::class, 'success']);
+            Route::get('/auth/error', [DeviceFlowController::class, 'error']);
         });
     }
 

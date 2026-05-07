@@ -30,7 +30,7 @@ class OAuthControllerTest extends TestCase
         $client = Client::factory()->create(['enabled' => true]);
         $provider = SocialProvider::where('enabled', true)->first();
 
-        if (!$provider) {
+        if (! $provider) {
             $provider = SocialProvider::first();
             $provider->enabled = true;
             $provider->save();
