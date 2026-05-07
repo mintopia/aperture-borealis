@@ -54,6 +54,10 @@ class DeviceFlowController extends Controller
 
         $providers = SocialProvider::where('enabled', true)->get();
 
+        if ($providers->count() === 1) {
+            return redirect("/auth/{$providers->first()->code}/redirect");
+        }
+
         return Inertia::render('Customer/Providers', [
             'providers' => $providers->map(fn ($p) => [
                 'code' => $p->code,
