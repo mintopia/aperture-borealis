@@ -2,6 +2,11 @@
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
+const props = defineProps({
+    showName: { type: Boolean, default: true },
+    iconClass: { type: String, default: 'h-6 w-6' },
+});
+
 const page = usePage();
 const appName = computed(() => page.props.appName || 'Borealis');
 const logoUrl = computed(() => page.props.theme?.site_logo_url || null);
@@ -12,7 +17,7 @@ const logoUrl = computed(() => page.props.theme?.site_logo_url || null);
         class="font-heading flex items-center gap-2 text-lg font-bold text-[var(--color-text)]"
         data-testid="app-logo"
     >
-        <img v-if="logoUrl" :src="logoUrl" :alt="appName" class="h-6 w-6 rounded" data-testid="app-logo-image" />
+        <img v-if="logoUrl" :src="logoUrl" :alt="appName" :class="iconClass" class="rounded" data-testid="app-logo-image" />
         <svg
             v-else
             xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +27,8 @@ const logoUrl = computed(() => page.props.theme?.site_logo_url || null);
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="h-6 w-6 text-[var(--color-primary)]"
+            :class="iconClass"
+            class="text-[var(--color-primary)]"
             aria-hidden="true"
             data-testid="app-logo-icon"
         >
@@ -34,7 +40,7 @@ const logoUrl = computed(() => page.props.theme?.site_logo_url || null);
             <line x1="14.31" y1="16" x2="2.83" y2="16" />
             <line x1="16.62" y1="12" x2="10.88" y2="21.94" />
         </svg>
-        {{ appName }}
+        <span v-if="showName">{{ appName }}</span>
     </span>
 </template>
 

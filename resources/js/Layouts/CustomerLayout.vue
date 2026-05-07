@@ -15,8 +15,8 @@ const legal = page.props.legal || {};
         <Head :title="$page.props.title ?? ''" />
 
         <div class="w-full max-w-[420px]">
-            <div class="mb-8 flex justify-center">
-                <AppLogo class="text-xl" />
+            <div class="mb-6 flex justify-center">
+                <AppLogo :show-name="false" icon-class="h-12 w-12" />
             </div>
 
             <slot />
