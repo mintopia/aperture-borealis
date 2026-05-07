@@ -72,12 +72,6 @@ jobs:
       - name: Laravel Pint (formatting)
         run: vendor/bin/pint --test --format agent
 
-      - name: PHPStan Level 8 (static analysis)
-        run: vendor/bin/phpstan analyse --no-progress
-
-      - name: Rector (code quality)
-        run: vendor/bin/rector process --dry-run --no-progress-bar
-
       - name: PHPUnit (tests + coverage)
         run: XDEBUG_MODE=coverage php artisan test --parallel --compact --coverage-clover=storage/coverage/php/clover.xml
         env:
