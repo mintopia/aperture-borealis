@@ -66,17 +66,24 @@ class LoginController extends Controller
             ->first();
 
         if (! $user) {
-            $user = User::create([
-                'nickname' => $socialUser->getNickname() ?? $socialUser->getName(),
-                'email' => $socialUser->getEmail(),
+            $user = User::where('email', $socialUser->getEmail())->first();
+        }
+
+        if ($user) {
+            $user->update([
                 'external_id' => $socialUser->getId(),
                 'social_provider_id' => $socialProvider->id,
+                'nickname' => $socialUser->getNickname() ?? $socialUser->getName() ?? $user->nickname,
                 'access_token' => $socialUser->token,
                 'refresh_token' => $socialUser->refreshToken,
                 'access_token_expires_at' => $socialUser->expiresIn ? now()->addSeconds($socialUser->expiresIn) : null,
             ]);
         } else {
-            $user->update([
+            $user = User::create([
+                'nickname' => $socialUser->getNickname() ?? $socialUser->getName(),
+                'email' => $socialUser->getEmail(),
+                'external_id' => $socialUser->getId(),
+                'social_provider_id' => $socialProvider->id,
                 'access_token' => $socialUser->token,
                 'refresh_token' => $socialUser->refreshToken,
                 'access_token_expires_at' => $socialUser->expiresIn ? now()->addSeconds($socialUser->expiresIn) : null,
