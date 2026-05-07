@@ -13,7 +13,7 @@ class DiscordProvider extends AbstractSocialProvider
 
     protected string $socialiteProviderCode = 'discord';
 
-    protected function getSocialiteProvider()
+    public function getSocialiteProvider()
     {
         return Socialite::buildProvider(Provider::class, [
             'client_id' => $this->provider->getSetting('client_id'),

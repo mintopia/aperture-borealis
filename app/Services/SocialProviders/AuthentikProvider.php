@@ -36,7 +36,7 @@ class AuthentikProvider extends AbstractSocialProvider
         );
     }
 
-    protected function getSocialiteProvider()
+    public function getSocialiteProvider()
     {
         $config = new Config(
             $this->provider->getSetting('client_id'),

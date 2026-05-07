@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
@@ -48,7 +47,7 @@ class LoginController extends Controller
     {
         $socialProvider = SocialProvider::where('code', $provider)->where('enabled', true)->firstOrFail();
 
-        return Socialite::driver($socialProvider->code)->redirect();
+        return $socialProvider->redirect(true);
     }
 
     public function socialCallback(Request $request, string $provider)
@@ -56,7 +55,7 @@ class LoginController extends Controller
         $socialProvider = SocialProvider::where('code', $provider)->where('enabled', true)->firstOrFail();
 
         try {
-            $socialUser = Socialite::driver($socialProvider->code)->user();
+            $socialUser = $socialProvider->getProvider()->getSocialiteProvider()->user();
         } catch (\Exception $e) {
             return redirect()->route('admin.login')->with('error', 'Authentication failed. Please try again.');
         }

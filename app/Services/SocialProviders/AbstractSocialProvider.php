@@ -111,7 +111,7 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         return $this->getSocialiteProvider()->redirect();
     }
 
-    protected function getSocialiteProvider()
+    public function getSocialiteProvider()
     {
         return Socialite::driver($this->socialiteProviderCode);
     }

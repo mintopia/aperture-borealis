@@ -13,7 +13,7 @@ class TwitchProvider extends AbstractSocialProvider
 
     protected string $socialiteProviderCode = 'twitch';
 
-    protected function getSocialiteProvider()
+    public function getSocialiteProvider()
     {
         return Socialite::buildProvider(Provider::class, [
             'client_id' => $this->provider->getSetting('client_id'),

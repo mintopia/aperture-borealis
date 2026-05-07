@@ -2,7 +2,6 @@
 import { useForm } from '@inertiajs/vue3';
 import CustomerLayout from '@/Layouts/CustomerLayout.vue';
 import ProviderButton from '@/Components/Customer/ProviderButton.vue';
-import AppLogo from '@/Components/AppLogo.vue';
 
 defineOptions({ layout: CustomerLayout });
 
@@ -22,11 +21,7 @@ function submitLogin() {
 
 <template>
     <div class="w-full max-w-[400px] mx-auto">
-        <!-- Brand -->
-        <div class="flex items-center justify-center mb-1">
-            <AppLogo class="text-2xl" />
-        </div>
-        <p class="text-center text-[13px] text-[var(--color-text-muted)] mb-10">
+        <p class="text-center text-[13px] text-[var(--color-text-muted)] -mt-4 mb-10">
             Admin Dashboard
         </p>
 

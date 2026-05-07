@@ -37,4 +37,6 @@ interface SocialProviderContract
     public function user(): User;
 
     public function code(DeviceCode $deviceCode): DeviceCode;
+
+    public function getSocialiteProvider();
 }
