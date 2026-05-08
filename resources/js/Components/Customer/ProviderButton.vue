@@ -8,6 +8,7 @@ defineProps({
 
 const brandColors = {
     discord: { bg: 'bg-[#5865F2]', hover: 'hover:bg-[#4752C4]' },
+    google: { bg: 'bg-[#4285F4]', hover: 'hover:bg-[#3367D6]' },
     steam: { bg: 'bg-[#171A21]', hover: 'hover:bg-[#2A475E]' },
     twitch: { bg: 'bg-[#9146FF]', hover: 'hover:bg-[#772CE8]' },
     authentik: { bg: 'bg-[#FD4B2D]', hover: 'hover:bg-[#E04328]' },
