@@ -149,7 +149,7 @@ abstract class AbstractSocialProvider implements SocialProviderContract
 
         if ($user === null) {
             $localUser = new User;
-            $localUser->nickname = $remoteUser->getNickname();
+            $localUser->nickname = $this->resolveNickname($remoteUser);
             $localUser->save();
         }
 
@@ -159,7 +159,10 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         return $user;
     }
 
-    // Subclasses should implement provider-specific user updates
+    protected function resolveNickname(SocialiteUser $remoteUser): ?string
+    {
+        return $remoteUser->getNickname() ?? $remoteUser->getName();
+    }
 
     protected function updateUser(User $user, SocialiteUser $remoteUser): void
     {
@@ -169,7 +172,7 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         $user->refresh_token = $remoteUser->refreshToken;
         $user->access_token = $remoteUser->token;
         $user->access_token_expires_at = CarbonImmutable::now()->addSeconds($remoteUser->expiresIn);
-        $user->nickname = $remoteUser->getNickname();
+        $user->nickname = $this->resolveNickname($remoteUser);
     }
 
     protected function updateDeviceCode(DeviceCode $deviceCode, SocialiteUser $remoteUser): void
@@ -180,7 +183,7 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         $deviceCode->access_token = $remoteUser->token;
         $deviceCode->refresh_token = $remoteUser->refreshToken;
         $deviceCode->access_token_expires_at = CarbonImmutable::now()->addSeconds($remoteUser->expiresIn);
-        $deviceCode->nickname = $remoteUser->getNickname();
+        $deviceCode->nickname = $this->resolveNickname($remoteUser);
         $deviceCode->email = $remoteUser->getEmail();
         $deviceCode->external_id = $remoteUser->getId();
         $deviceCode->avatar_url = $remoteUser->getAvatar();
