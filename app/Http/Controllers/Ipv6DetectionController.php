@@ -16,13 +16,16 @@ class Ipv6DetectionController extends Controller
 
         $jwt = $jwtService->sign($ip);
 
-        return response()->json(['token' => $jwt]);
+        return response()->json(['token' => $jwt], 200, [
+            'Access-Control-Allow-Origin' => '*',
+        ]);
     }
 
     public function jwks(Ipv6JwtService $jwtService): JsonResponse
     {
         return response()->json($jwtService->jwks(), 200, [
             'Cache-Control' => 'public, max-age=3600',
+            'Access-Control-Allow-Origin' => '*',
         ]);
     }
 }

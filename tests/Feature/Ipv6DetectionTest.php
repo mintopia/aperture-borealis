@@ -25,6 +25,7 @@ class Ipv6DetectionTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure(['token']);
+        $response->assertHeader('Access-Control-Allow-Origin', '*');
 
         $jwt = $response->json('token');
         $this->assertNotEmpty($jwt);
@@ -61,6 +62,25 @@ class Ipv6DetectionTest extends TestCase
         $response = $this->getJson('/.well-known/jwks.json');
 
         $response->assertHeader('Cache-Control', 'max-age=3600, public');
+        $response->assertHeader('Access-Control-Allow-Origin', '*');
+    }
+
+    public function test_ipv6_cors_preflight(): void
+    {
+        $response = $this->call('OPTIONS', '/ipv6');
+
+        $response->assertNoContent();
+        $response->assertHeader('Access-Control-Allow-Origin', '*');
+        $response->assertHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    }
+
+    public function test_jwks_cors_preflight(): void
+    {
+        $response = $this->call('OPTIONS', '/.well-known/jwks.json');
+
+        $response->assertNoContent();
+        $response->assertHeader('Access-Control-Allow-Origin', '*');
+        $response->assertHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     }
 
     public function test_jwt_is_verifiable_by_aperture_flow(): void
