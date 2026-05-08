@@ -24,9 +24,9 @@ class Ipv6DetectionTest extends TestCase
         $response = $this->get('/ipv6', ['REMOTE_ADDR' => '2001:db8::1']);
 
         $response->assertOk();
-        $response->assertHeader('Content-Type', 'text/plain; charset=UTF-8');
+        $response->assertJsonStructure(['token']);
 
-        $jwt = $response->getContent();
+        $jwt = $response->json('token');
         $this->assertNotEmpty($jwt);
 
         $jwksResponse = $this->getJson('/.well-known/jwks.json');
@@ -66,7 +66,7 @@ class Ipv6DetectionTest extends TestCase
     public function test_jwt_is_verifiable_by_aperture_flow(): void
     {
         $response = $this->get('/ipv6', ['REMOTE_ADDR' => '2001:db8::42']);
-        $jwt = $response->getContent();
+        $jwt = $response->json('token');
 
         $jwksResponse = $this->getJson('/.well-known/jwks.json');
         $keys = JWK::parseKeySet($jwksResponse->json());

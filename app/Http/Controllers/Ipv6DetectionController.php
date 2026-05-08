@@ -7,17 +7,16 @@ namespace App\Http\Controllers;
 use App\Services\Ipv6JwtService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class Ipv6DetectionController extends Controller
 {
-    public function detect(Request $request, Ipv6JwtService $jwtService): Response
+    public function detect(Request $request, Ipv6JwtService $jwtService): JsonResponse
     {
         $ip = $request->ip();
 
         $jwt = $jwtService->sign($ip);
 
-        return response($jwt, 200, ['Content-Type' => 'text/plain']);
+        return response()->json(['token' => $jwt]);
     }
 
     public function jwks(Ipv6JwtService $jwtService): JsonResponse
