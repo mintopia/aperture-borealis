@@ -11,8 +11,26 @@ use Inertia\Inertia;
 
 class DeviceFlowController extends Controller
 {
-    public function code()
+    public function code(Request $request)
     {
+        // When the user arrives via the QR code (verification_uri_complete), the
+        // user code is pre-supplied as a query parameter. Validate it and skip
+        // straight to provider selection rather than asking them to type it.
+        $code = $request->query('code');
+
+        if (is_string($code) && strlen($code) === 4) {
+            $deviceCode = DeviceCode::where('user_code', strtoupper($code))
+                ->where('status', DeviceCodeStatus::dcsPending)
+                ->where('expires_at', '>', now())
+                ->first();
+
+            if ($deviceCode) {
+                $request->session()->put('device_code_id', $deviceCode->id);
+
+                return redirect('/auth/providers');
+            }
+        }
+
         return Inertia::render('Customer/Code');
     }
 
