@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\OAuth2;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -19,7 +20,7 @@ class DeviceRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -27,11 +28,11 @@ class DeviceRequest extends FormRequest
             'scope' => [
                 'required',
                 'string',
-                    Rule::exists('social_providers', 'code')
-                        ->where(function (Builder $query) {
-                            $query->whereEnabled(true);
+                Rule::exists('social_providers', 'code')
+                    ->where(function (Builder $query) {
+                        $query->whereEnabled(true);
                     }),
-                ],
-            ];
+            ],
+        ];
     }
 }

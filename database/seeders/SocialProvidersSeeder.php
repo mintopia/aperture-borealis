@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Services\SocialProviders\AuthentikProvider;
 use App\Services\SocialProviders\DiscordProvider;
+use App\Services\SocialProviders\GoogleProvider;
 use App\Services\SocialProviders\LaravelPassportProvider;
 use App\Services\SocialProviders\TwitchProvider;
 use Illuminate\Database\Seeder;
@@ -17,6 +18,7 @@ class SocialProvidersSeeder extends Seeder
     {
         $classes = [
             DiscordProvider::class,
+            GoogleProvider::class,
             TwitchProvider::class,
             LaravelPassportProvider::class,
             AuthentikProvider::class,

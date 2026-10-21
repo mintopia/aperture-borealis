@@ -2,18 +2,18 @@
 
 namespace App\Services\SocialProviders;
 
-use App\Models\LinkedAccount;
 use Laravel\Socialite\Facades\Socialite;
 use SocialiteProviders\Discord\Provider;
 
 class DiscordProvider extends AbstractSocialProvider
 {
     protected string $name = 'Discord';
+
     protected string $code = 'discord';
+
     protected string $socialiteProviderCode = 'discord';
 
-
-    protected function getSocialiteProvider()
+    public function getSocialiteProvider()
     {
         return Socialite::buildProvider(Provider::class, [
             'client_id' => $this->provider->getSetting('client_id'),

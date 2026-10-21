@@ -6,9 +6,6 @@ use App\Enums\DeviceCodeStatus;
 use App\Enums\SettingType;
 use App\Exceptions\SocialProviderException;
 use App\Models\DeviceCode;
-use App\Models\EmailAddress;
-use App\Models\LinkedAccount;
-use App\Models\ProviderSetting;
 use App\Models\SocialProvider;
 use App\Models\SocialProviderSetting;
 use App\Models\User;
@@ -23,7 +20,9 @@ use Laravel\Socialite\Facades\Socialite;
 abstract class AbstractSocialProvider implements SocialProviderContract
 {
     protected string $name;
+
     protected string $code;
+
     protected string $socialiteProviderCode;
 
     public function __construct(protected ?SocialProvider $provider = null, protected ?string $redirectUrl = null)
@@ -37,10 +36,9 @@ abstract class AbstractSocialProvider implements SocialProviderContract
             return;
         }
         if (Auth::guest() && $this->provider && $this->provider->auth_enabled) {
-            // Probably login
-            $this->redirectUrl = route('login.return', $this->code);
+            $this->redirectUrl = route('admin.login.provider.callback', ['provider' => $this->code]);
         } else {
-            $this->redirectUrl = route('auth.return', $this->code);
+            $this->redirectUrl = route('auth.provider.callback', ['provider' => $this->code]);
         }
     }
 
@@ -50,10 +48,11 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         if ($this->provider) {
             // Ensure settings exist/are up-to-date for existing provider (idempotent)
             $this->installSettings();
+
             return $this->provider;
         }
 
-        $provider = new SocialProvider();
+        $provider = new SocialProvider;
         $this->provider = $provider;
         $provider->name = $this->name;
         $provider->code = $this->code;
@@ -74,8 +73,8 @@ abstract class AbstractSocialProvider implements SocialProviderContract
     {
         foreach ($this->configMapping() as $code => $config) {
             $setting = $this->provider->settings()->whereCode($code)->first();
-            if (!$setting) {
-                $setting = new SocialProviderSetting();
+            if (! $setting) {
+                $setting = new SocialProviderSetting;
                 $setting->provider()->associate($this->provider);
                 $setting->code = $code;
                 // Only set value initially
@@ -95,11 +94,11 @@ abstract class AbstractSocialProvider implements SocialProviderContract
     public function configMapping(): array
     {
         return [
-            'client_id' => (object)[
+            'client_id' => (object) [
                 'name' => 'Client ID',
                 'validation' => 'required|string',
             ],
-            'client_secret' => (object)[
+            'client_secret' => (object) [
                 'name' => 'Client Secret',
                 'validation' => 'required|string',
                 'encrypted' => true,
@@ -112,7 +111,7 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         return $this->getSocialiteProvider()->redirect();
     }
 
-    protected function getSocialiteProvider()
+    public function getSocialiteProvider()
     {
         return Socialite::driver($this->socialiteProviderCode);
     }
@@ -121,6 +120,7 @@ abstract class AbstractSocialProvider implements SocialProviderContract
     {
         $remoteUser = $this->getSocialiteProvider()->user();
         $this->updateDeviceCode($deviceCode, $remoteUser);
+
         return $deviceCode;
     }
 
@@ -135,11 +135,11 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         }
 
         // Find the email
-        if (!$user) {
+        if (! $user) {
             $user = User::whereEmail($remoteUser->getEmail())->first();
         }
 
-        if (!$user) {
+        if (! $user) {
             throw new SocialProviderException('You do not have access to this application');
         }
 
@@ -148,17 +148,21 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         }
 
         if ($user === null) {
-            $localUser = new User();
-            $localUser->nickname = $remoteUser->getNickname();
+            $localUser = new User;
+            $localUser->nickname = $this->resolveNickname($remoteUser);
             $localUser->save();
         }
 
         $this->updateUser($user, $remoteUser);
         $user->save();
+
         return $user;
     }
 
-    // Subclasses should implement provider-specific user updates
+    protected function resolveNickname(SocialiteUser $remoteUser): ?string
+    {
+        return $remoteUser->getNickname() ?? $remoteUser->getName();
+    }
 
     protected function updateUser(User $user, SocialiteUser $remoteUser): void
     {
@@ -168,7 +172,7 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         $user->refresh_token = $remoteUser->refreshToken;
         $user->access_token = $remoteUser->token;
         $user->access_token_expires_at = CarbonImmutable::now()->addSeconds($remoteUser->expiresIn);
-        $user->nickname = $remoteUser->getNickname();
+        $user->nickname = $this->resolveNickname($remoteUser);
     }
 
     protected function updateDeviceCode(DeviceCode $deviceCode, SocialiteUser $remoteUser): void
@@ -179,7 +183,7 @@ abstract class AbstractSocialProvider implements SocialProviderContract
         $deviceCode->access_token = $remoteUser->token;
         $deviceCode->refresh_token = $remoteUser->refreshToken;
         $deviceCode->access_token_expires_at = CarbonImmutable::now()->addSeconds($remoteUser->expiresIn);
-        $deviceCode->nickname = $remoteUser->getNickname();
+        $deviceCode->nickname = $this->resolveNickname($remoteUser);
         $deviceCode->email = $remoteUser->getEmail();
         $deviceCode->external_id = $remoteUser->getId();
         $deviceCode->avatar_url = $remoteUser->getAvatar();

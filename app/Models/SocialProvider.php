@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class SocialProvider extends Model
 {
     use ToString;
+
     protected array $_settings = [];
 
     public function users(): HasMany
@@ -23,6 +24,7 @@ class SocialProvider extends Model
     public function redirect(bool $login = true)
     {
         $uri = $login ? $this->getLoginReturnURI() : $this->getAuthReturnURI();
+
         return $this->getProvider($uri)->redirect();
     }
 
@@ -31,23 +33,25 @@ class SocialProvider extends Model
         if (app()->bound($this->provider_class)) {
             return app()->make($this->provider_class, ['provider' => $this, 'redirectUrl' => $redirectUrl]);
         }
+
         return new $this->provider_class($this, $redirectUrl);
     }
 
     public function user(bool $login = true): ?User
     {
         $uri = $login ? $this->getLoginReturnURI() : $this->getAuthReturnURI();
+
         return $this->getProvider($uri)->user();
     }
 
     public function getLoginReturnURI(): string
     {
-        return route('login.return', ['socialprovider' => $this->code]);
+        return route('admin.login.provider.callback', ['provider' => $this->code]);
     }
 
     public function getAuthReturnURI(): string
     {
-        return route('auth.return', ['socialprovider' => $this->code]);
+        return route('auth.provider.callback', ['provider' => $this->code]);
     }
 
     public function configMapping(): array
@@ -61,11 +65,13 @@ class SocialProvider extends Model
             return $this->_settings[$code];
         }
         $setting = $this->settings()->whereCode($code)->first();
-        if (!$setting) {
+        if (! $setting) {
             $this->_settings[$code] = null;
+
             return null;
         }
         $this->_settings[$code] = $setting->value;
+
         return $setting->value;
     }
 

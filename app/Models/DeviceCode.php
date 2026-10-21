@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\DeviceCodeStatus;
 use App\Observers\DeviceCodeObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
@@ -16,6 +17,8 @@ use Ramsey\Uuid\Uuid;
 #[ObservedBy([DeviceCodeObserver::class])]
 class DeviceCode extends Model
 {
+    use HasFactory;
+
     public function provider(): BelongsTo
     {
         return $this->belongsTo(SocialProvider::class, 'social_provider_id');
@@ -58,6 +61,7 @@ class DeviceCode extends Model
         if ($complete) {
             $params['code'] = $this->user_code;
         }
+
         return route('auth', $params);
     }
 
@@ -67,6 +71,7 @@ class DeviceCode extends Model
             return $this->avatar_url;
         }
         $hash = hash('sha256', strtolower(trim($this->email) ?? ''));
+
         return "https://www.gravatar.com/avatar/{$hash}?d=mp";
     }
 }

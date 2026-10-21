@@ -1,5 +1,6 @@
 <?php
-use App\Http\Controllers\OAuthController;
+
+use App\Http\Controllers\Api\OAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('device', [OAuthController::class, 'device'])->name('device');

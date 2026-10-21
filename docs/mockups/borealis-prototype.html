@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Borealis — Design Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Variables ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: oklch(13% 0.006 60);
+  --surface-1: oklch(17% 0.006 60);
+  --surface-2: oklch(21% 0.006 60);
+  --surface-3: oklch(25% 0.006 60);
+  --text: oklch(95% 0.006 60);
+  --text-2: oklch(75% 0.006 60);
+  --text-3: oklch(55% 0.006 60);
+  --divider: oklch(26% 0.004 60);
+  --divider-strong: oklch(33% 0.004 60);
+  --input-bg: oklch(15% 0.006 60);
+  --up: oklch(72% 0.17 155);
+  --down: oklch(65% 0.2 25);
+  --warn: oklch(78% 0.15 85);
+  --info: oklch(70% 0.1 240);
+  --accent: oklch(76% 0.16 55);
+  --accent-hover: oklch(69% 0.19 55);
+  --accent-dim: oklch(76% 0.16 55 / 0.14);
+  --accent-text: oklch(98% 0.01 55);
+  --glow: oklch(76% 0.16 55 / 0.25);
+  /* Aperture dispatch.css token aliases */
+  --color-primary: oklch(76% 0.16 55);
+  --color-primary-hover: oklch(69% 0.19 55);
+  --color-accent: oklch(76% 0.16 55);
+  --color-accent-hover: oklch(69% 0.19 55);
+  --color-accent-dim: oklch(76% 0.16 55 / 0.14);
+  --color-accent-text: oklch(98% 0.01 55);
+  --color-glow: oklch(76% 0.16 55 / 0.25);
+  --color-success: oklch(72% 0.17 155);
+  --color-warning: oklch(78% 0.15 85);
+  --color-danger: oklch(65% 0.2 25);
+  --color-info: oklch(70% 0.1 240);
+  --color-bg: oklch(13% 0.006 60);
+  --color-surface: oklch(17% 0.006 60);
+  --color-surface-hover: oklch(21% 0.006 60);
+  --color-surface-alt: oklch(20% 0.008 60);
+  --color-text: oklch(95% 0.006 60);
+  --color-text-secondary: oklch(75% 0.006 60);
+  --color-text-muted: oklch(55% 0.006 60);
+  --color-border: oklch(26% 0.004 60);
+  --color-border-hover: oklch(33% 0.004 60);
+  --color-input-bg: oklch(15% 0.006 60);
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Hanken Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Fixed Top Bar ── */
+.proto-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  height: 40px; display: flex; align-items: center; justify-content: center;
+  background: oklch(10% 0.006 60); border-bottom: 1px solid var(--divider);
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-3);
+  letter-spacing: 0.04em;
+}
+body { padding-top: 40px; }
+
+/* ── Page Separators ── */
+.page-separator {
+  display: flex; align-items: center; justify-content: center;
+  height: 80px; border-top: 2px solid var(--divider-strong);
+  background: oklch(10% 0.006 60);
+}
+.page-separator h2 {
+  font-family: var(--font-display); font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent);
+}
+
+/* ── Customer Page Shell ── */
+.customer-page {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; padding: 48px 20px 40px;
+}
+.customer-inner {
+  width: 100%; max-width: 420px; display: flex; flex-direction: column;
+  align-items: center; flex: 1;
+}
+
+/* ── Event Logo Mark ── */
+.event-logo {
+  width: 48px; height: 48px; border-radius: 10px;
+  background: var(--accent); display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 24px;
+  color: oklch(15% 0.006 60); margin-bottom: 8px;
+}
+.event-name-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-3); margin-bottom: 32px;
+}
+
+/* ── Headings ── */
+.customer-heading {
+  font-family: var(--font-display); font-size: 26px; font-weight: 700;
+  color: var(--text); text-align: center; margin-bottom: 8px;
+}
+.customer-subtitle {
+  font-size: 14px; color: var(--text-2); text-align: center;
+  margin-bottom: 32px; max-width: 340px; line-height: 1.6;
+}
+
+/* ── Input Fields ── */
+.input-field {
+  width: 100%; height: 52px; border-radius: 8px;
+  background: var(--input-bg); border: 1px solid var(--divider-strong);
+  color: var(--text); font-family: var(--font-body); font-size: 15px;
+  padding: 0 16px; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input-field:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow);
+}
+.input-field::placeholder { color: var(--text-3); }
+.input-field.mono-input {
+  font-family: var(--font-mono); font-size: 20px; font-weight: 600;
+  text-align: center; text-transform: uppercase; letter-spacing: 0.12em;
+}
+.input-field.error {
+  border-color: var(--down);
+  box-shadow: 0 0 0 3px oklch(65% 0.2 25 / 0.2);
+}
+.field-error {
+  font-size: 13px; color: var(--down); margin-top: 6px; width: 100%; text-align: left;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 48px; padding: 0 28px; border-radius: 8px; border: none;
+  font-family: var(--font-body); font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s, opacity 0.15s;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--accent); color: var(--accent-text);
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-full { width: 100%; }
+.btn-green { background: var(--up); color: oklch(15% 0.01 155); }
+.btn-secondary {
+  background: transparent; color: var(--text-2);
+  border: 1px solid var(--divider-strong);
+}
+.btn-secondary:hover { background: var(--surface-2); color: var(--text); }
+.btn-outline {
+  background: transparent; border: 1px solid var(--divider-strong);
+  color: var(--text);
+}
+.btn-outline:hover { background: var(--surface-2); }
+.btn-danger-outline {
+  background: transparent; border: 1px solid oklch(65% 0.2 25 / 0.4);
+  color: var(--down);
+}
+.btn-danger-outline:hover { background: oklch(65% 0.2 25 / 0.08); }
+.btn-sm { height: 36px; padding: 0 16px; font-size: 13px; border-radius: 6px; }
+.btn:disabled, .btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+
+/* ── Alert Banners ── */
+.alert-banner {
+  width: 100%; padding: 14px 16px; border-radius: 8px;
+  font-size: 13px; line-height: 1.5; margin-bottom: 20px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.alert-banner .alert-icon { flex-shrink: 0; margin-top: 1px; }
+.alert-danger {
+  background: oklch(65% 0.2 25 / 0.08);
+  border: 1px solid oklch(65% 0.2 25 / 0.25);
+  color: oklch(80% 0.12 25);
+}
+.alert-warn {
+  background: oklch(78% 0.15 85 / 0.08);
+  border: 1px solid oklch(78% 0.15 85 / 0.25);
+  color: oklch(85% 0.1 85);
+}
+
+/* ── Instructions List (CSS Counters) ── */
+.instructions-list {
+  list-style: none; counter-reset: step; width: 100%; margin-top: 28px;
+}
+.instructions-list li {
+  counter-increment: step; display: flex; align-items: flex-start;
+  gap: 14px; padding: 12px 0; font-size: 14px; color: var(--text-2);
+  border-bottom: 1px solid var(--divider);
+}
+.instructions-list li:last-child { border-bottom: none; }
+.instructions-list li::before {
+  content: counter(step);
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--surface-2); color: var(--accent);
+  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Provider Buttons ── */
+.provider-btn {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; height: 52px; border-radius: 8px; border: 1px solid transparent;
+  font-family: var(--font-body); font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.15s; margin-bottom: 12px;
+  position: relative;
+}
+.provider-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+.provider-steam {
+  background: #171a21; border-color: rgba(255,255,255,0.06);
+  color: oklch(85% 0.02 220);
+}
+.provider-discord { background: #5865F2; color: white; border-color: transparent; }
+.provider-twitch { background: #9146FF; color: white; border-color: transparent; }
+.provider-btn.loading { opacity: 0.7; cursor: wait; }
+.provider-btn.loading .provider-label { display: none; }
+.provider-btn.loading .provider-loading { display: flex; }
+.provider-loading {
+  display: none; align-items: center; gap: 10px;
+}
+
+/* ── Spinner ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid oklch(100% 0 0 / 0.3);
+  border-top-color: white; animation: spin 0.7s linear infinite;
+}
+
+/* ── Success / Error Circles ── */
+.status-circle {
+  width: 72px; height: 72px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+}
+.status-circle svg { width: 36px; height: 36px; }
+.status-success { background: oklch(72% 0.17 155 / 0.12); }
+.status-success svg { color: var(--up); }
+.status-error { background: oklch(65% 0.2 25 / 0.12); }
+.status-error svg { color: var(--down); }
+.status-warn { background: oklch(78% 0.15 85 / 0.12); }
+.status-warn svg { color: var(--warn); }
+
+/* ── Session Details Table ── */
+.session-table { width: 100%; margin: 20px 0; }
+.session-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--divider);
+  font-size: 14px;
+}
+
+/* ──────────────────────────────────────────── */
+/* ADMIN — Aperture Dispatch design system      */
+/* ──────────────────────────────────────────── */
+
+/* ── Admin Layout Shell ── */
+.admin-layout {
+  display: flex; min-height: 100vh;
+  background: var(--color-bg, var(--bg));
+}
+
+/* ── Sidebar ── */
+.admin-sidebar {
+  display: flex; flex-direction: column; width: 220px; flex-shrink: 0;
+  border-right: 1px solid var(--color-border, var(--divider));
+  background: var(--color-surface, var(--surface-1));
+}
+.sidebar-logo {
+  margin-bottom: 8px; padding: 20px 20px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.sidebar-logo-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  color: var(--color-primary, var(--accent));
+}
+.sidebar-logo-text {
+  font-family: var(--font-display); font-size: 22px; font-weight: 700;
+  letter-spacing: -0.02em; color: var(--color-text, var(--text));
+}
+.sidebar-nav { display: flex; flex-direction: column; gap: 24px; flex: 1; overflow-y: auto; }
+.sidebar-group { display: flex; flex-direction: column; gap: 1px; }
+.sidebar-section-label {
+  margin-bottom: 4px; padding: 0 20px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, var(--text-3));
+}
+.sidebar-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 20px; font-size: 14px;
+  color: var(--color-text-secondary, var(--text-2));
+  cursor: pointer; text-decoration: none;
+  transition: all 0.15s;
+}
+.sidebar-item:hover {
+  background: var(--color-surface-hover, var(--surface-2));
+  color: var(--color-text, var(--text));
+}
+.sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.6; }
+.sidebar-item.active {
+  background: var(--color-accent-dim, var(--accent-dim));
+  color: var(--color-primary, var(--accent));
+  font-weight: 600;
+}
+.sidebar-item.active svg { opacity: 1; }
+
+/* ── Admin Right Column ── */
+.admin-right { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+
+/* ── Admin Header ── */
+.admin-header {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 48px; padding: 0 24px;
+  border-bottom: 1px solid var(--color-border, var(--divider));
+  background: var(--color-surface, var(--surface-1));
+}
+.admin-breadcrumb {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--color-text-muted, var(--text-3));
+}
+.admin-breadcrumb span { color: var(--color-text-secondary, var(--text-2)); }
+.admin-controls {
+  display: flex; align-items: center; gap: 16px;
+}
+.admin-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--color-surface-hover, var(--surface-3));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+  color: var(--color-text, var(--text));
+}
+.admin-user-label {
+  font-size: 13px; color: var(--color-text-secondary, var(--text-2));
+}
+
+/* ── Admin Main Content ── */
+.admin-main {
+  flex: 1; width: 100%; max-width: 1400px;
+  margin: 0 auto; padding: 32px 40px 64px;
+}
+
+/* ── Page Title (32px Bricolage) ── */
+.page-title {
+  font-family: var(--font-display); font-size: 32px; line-height: 1.1;
+  font-weight: 700; letter-spacing: -0.03em;
+  color: var(--color-text, var(--text));
+  font-variation-settings: 'opsz' 48;
+  margin-bottom: 8px;
+}
+
+/* ── Stat Strip ── */
+.stat-strip {
+  margin: 24px 0 28px; display: flex; gap: 0;
+  border-bottom: 1px solid var(--color-border, var(--divider));
+  padding-bottom: 20px;
+}
+.stat-strip-item {
+  flex: 1; margin-right: 32px; padding-right: 32px;
+  border-right: 1px solid var(--color-border, var(--divider));
+}
+.stat-strip-item:last-child { margin-right: 0; padding-right: 0; border-right: none; }
+.stat-label {
+  margin-bottom: 3px; display: inline-flex; align-items: center; gap: 8px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, var(--text-3));
+}
+.stat-label-dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+}
+.stat-value {
+  font-family: var(--font-display); font-size: 28px; font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text, var(--text));
+  font-variation-settings: 'opsz' 36;
+}
+.stat-sub {
+  margin-top: 2px; font-family: var(--font-mono); font-size: 11px;
+  color: var(--color-text-muted, var(--text-3));
+}
+
+/* ── SectionHeader ── */
+.section-header { margin-bottom: 12px; }
+.section-header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.section-header h2 {
+  font-family: var(--font-display); font-size: 14px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--color-text-secondary, var(--text-2));
+  font-variation-settings: 'opsz' 16;
+}
+
+/* ── DataTable ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table thead th {
+  padding: 8px 0; text-align: left;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, var(--text-3));
+  border-bottom: 1px solid var(--color-border-hover, var(--divider-strong));
+}
+.data-table thead th:not(:first-child) { padding-left: 24px; }
+.data-table tbody td {
+  padding: 10px 0; vertical-align: top;
+  border-bottom: 1px solid var(--color-border, var(--divider));
+}
+.data-table tbody td:not(:first-child) { padding-left: 24px; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr.clickable {
+  cursor: pointer; transition: background 0.1s;
+}
+.data-table tbody tr.clickable:hover {
+  background: var(--color-surface-hover, var(--surface-2));
+}
+.data-table .cell-main {
+  font-size: 13px; font-weight: 600;
+  color: var(--color-text, var(--text));
+}
+.data-table .cell-link {
+  font-size: 13px; font-weight: 500;
+  color: var(--color-primary, var(--accent));
+  text-decoration: none; transition: color 0.1s;
+}
+.data-table .cell-link:hover { color: var(--color-primary-hover, var(--accent-hover)); }
+.data-table .cell-secondary {
+  font-size: 13px; color: var(--color-text-secondary, var(--text-2));
+}
+.data-table .cell-mono {
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--color-text-secondary, var(--text-2));
+}
+.data-table .cell-muted {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--color-text-muted, var(--text-3));
+}
+
+/* ── StatusPill ── */
+.status-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  border-radius: 4px; border: 1px solid; padding: 2px 10px;
+  font-size: 11px; font-weight: 600;
+}
+.status-pill-success {
+  background: oklch(72% 0.17 155 / 0.14);
+  color: var(--color-success, var(--up));
+  border-color: oklch(72% 0.17 155 / 0.14);
+}
+.status-pill-danger {
+  background: oklch(65% 0.2 25 / 0.14);
+  color: var(--color-danger, var(--down));
+  border-color: oklch(65% 0.2 25 / 0.14);
+}
+.status-pill-warning {
+  background: oklch(78% 0.15 85 / 0.14);
+  color: var(--color-warning, var(--warn));
+  border-color: oklch(78% 0.15 85 / 0.14);
+}
+.status-pill-neutral {
+  background: oklch(55% 0.006 60 / 0.14);
+  color: var(--color-text-muted, var(--text-3));
+  border-color: oklch(55% 0.006 60 / 0.14);
+}
+
+/* ── MetadataStrip ── */
+.metadata-strip {
+  margin-top: 24px; margin-bottom: 28px; display: flex; gap: 0;
+  border-bottom: 1px solid var(--color-border, var(--divider));
+  padding-bottom: 20px;
+}
+.metadata-item {
+  display: flex; flex-direction: column; flex: none;
+  margin-right: 32px; padding-right: 32px;
+  border-right: 1px solid var(--color-border, var(--divider));
+}
+.metadata-item:last-child { margin-right: 0; padding-right: 0; border-right: none; }
+.metadata-label {
+  margin-bottom: 3px; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--color-text-muted, var(--text-3));
+}
+.metadata-value {
+  font-size: 15px; font-weight: 500;
+  color: var(--color-text, var(--text));
+}
+
+/* ── FormField ── */
+.form-field { margin-bottom: 24px; }
+.form-field-inner { display: flex; flex-direction: column; gap: 6px; }
+.form-field label {
+  display: block; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-text-muted, var(--text-3));
+}
+.form-field label .required { color: var(--color-danger, var(--down)); }
+.form-field label .optional {
+  margin-left: 4px; font-size: 12px; font-weight: 400;
+  text-transform: none; letter-spacing: 0;
+  color: var(--color-text-muted, var(--text-3));
+}
+.form-input {
+  width: 100%; border-radius: 4px;
+  border: 1px solid var(--color-border-hover, var(--divider-strong));
+  background: var(--color-surface, var(--surface-1));
+  padding: 8px 12px;
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--color-text, var(--text));
+  outline: none; transition: border-color 0.15s;
+}
+.form-input:focus { border-color: var(--color-primary, var(--accent)); }
+.form-input::placeholder { color: var(--color-text-muted, var(--text-3)); }
+textarea.form-input { resize: vertical; }
+.form-hint {
+  font-size: 12px; color: var(--color-text-muted, var(--text-3));
+  margin-top: 4px;
+}
+
+/* ── Buttons (Aperture patterns) ── */
+.btn-primary-ap {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 6px; padding: 7px 16px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--color-primary, var(--accent));
+  background: var(--color-primary, var(--accent));
+  color: white; text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-primary-ap:hover { background: var(--color-primary-hover, var(--accent-hover)); }
+.btn-outline-ap {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 6px; padding: 7px 16px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--color-border-hover, var(--divider-strong));
+  background: transparent;
+  color: var(--color-text-secondary, var(--text-2));
+  text-decoration: none; transition: background 0.15s;
+}
+.btn-outline-ap:hover { background: var(--color-surface-hover, var(--surface-2)); }
+.btn-danger-ap {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 6px; padding: 7px 16px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: 1px solid oklch(65% 0.2 25 / 0.4);
+  background: transparent;
+  color: var(--color-danger, var(--down));
+  text-decoration: none; transition: background 0.15s;
+}
+.btn-danger-ap:hover { background: oklch(65% 0.2 25 / 0.12); }
+.btn-sm-ap { padding: 5px 12px; font-size: 12px; }
+
+/* ── Settings Layout (matches SettingsNav.vue) ── */
+.settings-layout {
+  display: flex; flex-direction: row;
+  margin: -32px -40px -64px;
+}
+.settings-subnav {
+  flex-shrink: 0; width: 180px;
+  border-right: 1px solid var(--color-border, var(--divider));
+  padding: 24px 0;
+}
+.settings-subnav-group { display: flex; flex-direction: column; gap: 4px; }
+.settings-subnav-group + .settings-subnav-group { margin-top: 12px; }
+.settings-subnav-label {
+  padding: 0 20px 4px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, var(--text-3));
+}
+.settings-subnav-item {
+  display: block; padding: 8px 20px;
+  font-size: 13px; border-radius: 6px;
+  color: var(--color-text-secondary, var(--text-2));
+  cursor: pointer; text-decoration: none;
+  transition: all 0.1s;
+}
+.settings-subnav-item:hover {
+  background: var(--color-surface-hover, var(--surface-2));
+  color: var(--color-text, var(--text));
+}
+.settings-subnav-item.active {
+  background: var(--color-accent-dim, var(--accent-dim));
+  color: var(--color-primary, var(--accent));
+  font-weight: 600;
+}
+.settings-content {
+  flex: 1; min-width: 0; padding: 32px 40px 64px;
+}
+
+/* ── Accent Swatches ── */
+.accent-swatches { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+.accent-swatch {
+  width: 32px; height: 32px; border-radius: 50%;
+  cursor: pointer; border: none; transition: transform 0.15s;
+}
+.accent-swatch:hover { transform: scale(1.1); }
+.accent-swatch.selected {
+  outline: 2px solid var(--color-primary, var(--accent));
+  outline-offset: 2px;
+}
+
+/* ── Hue Slider ── */
+.hue-slider {
+  margin-top: 12px; height: 8px; width: 100%; cursor: pointer;
+  -webkit-appearance: none; appearance: none; border-radius: 99px;
+  background: linear-gradient(to right,
+    oklch(70% 0.18 0), oklch(70% 0.18 60), oklch(70% 0.18 120),
+    oklch(70% 0.18 180), oklch(70% 0.18 240), oklch(70% 0.18 300),
+    oklch(70% 0.18 360));
+}
+.hue-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+  background: white; border: 2px solid var(--color-border-hover, var(--divider-strong));
+  cursor: pointer;
+}
+.hue-label {
+  margin-top: 4px; font-size: 12px;
+  color: var(--color-text-muted, var(--text-3));
+}
+
+/* ── Mode Toggle ── */
+.mode-toggle { display: flex; gap: 12px; }
+.mode-toggle-btn {
+  border-radius: 6px; padding: 7px 16px;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  text-transform: capitalize; border: none;
+  background: transparent;
+  color: var(--color-text-secondary, var(--text-2));
+  transition: all 0.15s;
+}
+.mode-toggle-btn.selected {
+  background: var(--color-accent-dim, var(--accent-dim));
+  color: var(--color-primary, var(--accent));
+  font-weight: 600;
+}
+
+/* ── Toggle Switch ── */
+.toggle-switch {
+  position: relative; width: 40px; height: 22px; border-radius: 11px;
+  background: var(--color-surface-hover, var(--surface-3));
+  cursor: pointer; transition: background 0.2s; flex-shrink: 0; border: none;
+}
+.toggle-switch.on { background: var(--color-success, var(--up)); }
+.toggle-switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: white; transition: transform 0.2s;
+}
+.toggle-switch.on::after { transform: translateX(18px); }
+
+/* ── Provider Card Grid ── */
+.provider-card-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border: 1px solid var(--color-border, var(--divider)); border-radius: 8px;
+  overflow: hidden;
+}
+.provider-card {
+  display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border, var(--divider));
+  border-right: 1px solid var(--color-border, var(--divider));
+}
+.provider-card:nth-child(2n) { border-right: none; }
+.provider-card:last-child { border-bottom: none; border-right: none; }
+.provider-card:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+.provider-card-icon {
+  width: 40px; height: 40px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.provider-card-icon svg { width: 22px; height: 22px; }
+.provider-card-info { flex: 1; min-width: 0; }
+.provider-card-name {
+  font-size: 14px; font-weight: 600;
+  color: var(--color-text, var(--text));
+}
+.provider-card-state {
+  font-size: 12px; margin-top: 2px;
+  color: var(--color-text-muted, var(--text-3));
+}
+.provider-card-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.provider-card-link {
+  font-size: 13px; text-decoration: none;
+  color: var(--color-primary, var(--accent));
+}
+.provider-card-link:hover { text-decoration: underline; }
+
+/* ── Danger Zone ── */
+.danger-zone {
+  margin-top: 32px; padding-top: 32px;
+  border-top: 1px solid var(--color-border, var(--divider));
+}
+.danger-zone-desc {
+  font-size: 13px; margin-top: 8px; margin-bottom: 16px;
+  color: var(--color-text-secondary, var(--text-2));
+}
+
+/* ── Admin Login ── */
+.admin-login {
+  min-height: 100vh; display: flex; align-items: center;
+  justify-content: center; flex-direction: column;
+  background: var(--color-bg, var(--bg));
+}
+.login-box { width: 100%; max-width: 400px; padding: 0 20px; }
+.login-brand {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 4px; justify-content: center;
+}
+.login-subtitle {
+  font-size: 13px; text-align: center; margin-bottom: 40px;
+  color: var(--color-text-muted, var(--text-3));
+}
+.login-divider {
+  display: flex; align-items: center; gap: 12px; margin: 16px 0;
+}
+.login-divider::before, .login-divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--color-border, var(--divider));
+}
+.login-divider span {
+  font-size: 12px; color: var(--color-text-muted, var(--text-3));
+}
+
+/* ── Credential Row ── */
+.credential-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 1px solid var(--color-border, var(--divider));
+}
+.credential-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; min-width: 120px;
+  color: var(--color-text-muted, var(--text-3));
+}
+.credential-value {
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--color-text, var(--text)); flex: 1; margin: 0 16px;
+}
+.credential-actions { display: flex; gap: 8px; }
+
+/* ── Mobile Frame ── */
+.mobile-frame-wrapper {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; padding: 40px 20px 60px;
+}
+.mobile-frame-label {
+  font-size: 12px; margin-bottom: 16px;
+  font-family: var(--font-mono);
+  color: var(--color-text-muted, var(--text-3));
+}
+.mobile-frame {
+  width: 375px; height: 812px; border-radius: 40px;
+  border: 2px solid var(--color-border-hover, var(--divider-strong));
+  overflow: hidden; position: relative;
+  background: var(--color-bg, var(--bg));
+}
+.mobile-notch {
+  height: 44px; display: flex; align-items: flex-end;
+  justify-content: center; padding-bottom: 6px;
+}
+.notch-pill {
+  width: 120px; height: 28px; border-radius: 14px;
+  background: oklch(10% 0.006 60);
+}
+.mobile-content {
+  padding: 20px 20px 32px; display: flex; flex-direction: column;
+  align-items: center; height: calc(100% - 44px); overflow-y: auto;
+}
+.mobile-content .event-logo { width: 40px; height: 40px; font-size: 20px; border-radius: 8px; }
+.mobile-content .customer-heading { font-size: 22px; }
+.mobile-content .customer-subtitle { font-size: 13px; margin-bottom: 24px; }
+/* ── Code Entry Boxes ── */
+.code-inputs {
+  display: flex; gap: 12px; justify-content: center;
+  width: 100%; margin-bottom: 24px;
+}
+.code-box {
+  width: 56px; height: 64px; border-radius: 8px; text-align: center;
+  background: var(--input-bg); border: 1px solid var(--divider-strong);
+  color: var(--text); font-family: var(--font-mono); font-size: 24px; font-weight: 700;
+  text-transform: uppercase; outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.code-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
+.code-box.error {
+  border-color: var(--down);
+  box-shadow: 0 0 0 3px oklch(65% 0.2 25 / 0.2);
+}
+
+/* ── How It Works ── */
+.how-it-works {
+  width: 100%; margin-top: 24px; font-size: 14px;
+  color: var(--text-2);
+}
+.how-it-works summary {
+  cursor: pointer; text-align: center; font-weight: 600;
+  font-size: 13px; color: var(--text-3);
+}
+.how-it-works summary:hover { color: var(--text-2); }
+
+/* ── Customer Footer ── */
+.customer-footer {
+  margin-top: auto; padding-top: 40px;
+  font-size: 12px; color: var(--text-3); text-align: center;
+}
+.customer-footer a {
+  color: var(--text-3); text-decoration: none;
+  transition: color 0.15s;
+}
+.customer-footer a:hover { color: var(--text-2); }
+.footer-sep { margin: 0 6px; opacity: 0.4; }
+
+/* ── User Avatar Circle ── */
+.user-avatar-circle {
+  width: 72px; height: 72px; border-radius: 50%; background: var(--surface-3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--text);
+  margin-bottom: 16px;
+}
+
+/* ── Code Reassurance ── */
+.code-reassurance {
+  font-family: var(--font-mono); font-size: 13px; color: var(--text-3);
+  text-align: center; margin-top: 16px;
+}
+
+/* ── Utility Classes ── */
+.w-full { width: 100%; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+
+/* ── Mobile Overrides ── */
+.mobile-content .code-inputs { gap: 8px; }
+.mobile-content .code-box { width: 44px; height: 48px; font-size: 18px; }
+.mobile-content .btn { height: 44px; font-size: 14px; }
+.mobile-content .instructions-list { margin-top: 20px; }
+.mobile-content .instructions-list li { font-size: 13px; padding: 10px 0; }
+.mobile-content .instructions-list li::before { width: 24px; height: 24px; font-size: 11px; }
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- FIXED TOP BAR                             -->
+<!-- ══════════════════════════════════════════ -->
+<div class="proto-bar">BOREALIS — Design Prototype · Scroll for all pages</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 1 — CODE ENTRY                       -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 1 — Code Entry</h2></div>
+<section class="customer-page">
+  <div class="customer-inner">
+    <div class="event-logo">E</div>
+    <div class="event-name-label">EPIC.LAN 42</div>
+    <h1 class="customer-heading">Enter your code</h1>
+    <p class="customer-subtitle">Find the code shown on your PC screen</p>
+    <div class="code-inputs">
+      <input type="text" class="code-box" maxlength="1" placeholder="·">
+      <input type="text" class="code-box" maxlength="1" placeholder="·">
+      <input type="text" class="code-box" maxlength="1" placeholder="·">
+      <input type="text" class="code-box" maxlength="1" placeholder="·">
+    </div>
+    <button class="btn btn-primary btn-full">Continue</button>
+    <details class="how-it-works">
+      <summary>How it works</summary>
+      <ol class="instructions-list" style="margin-top:12px">
+        <li>Find the 4-digit code displayed on your PC</li>
+        <li>Enter it above</li>
+        <li>Choose your login provider</li>
+      </ol>
+    </details>
+    <div class="customer-footer">
+      Powered by Borealis<span class="footer-sep">·</span>
+      <a href="#">Terms</a><span class="footer-sep">·</span>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 2 — CODE ENTRY — ERROR STATE         -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 2 — Code Entry — Error State</h2></div>
+<section class="customer-page">
+  <div class="customer-inner">
+    <div class="event-logo">E</div>
+    <div class="event-name-label">EPIC.LAN 42</div>
+    <h1 class="customer-heading">Enter your code</h1>
+    <p class="customer-subtitle">Find the code shown on your PC screen</p>
+    <div class="code-inputs">
+      <input type="text" class="code-box error" maxlength="1" value="H">
+      <input type="text" class="code-box error" maxlength="1" value="X">
+      <input type="text" class="code-box error" maxlength="1" value="4">
+      <input type="text" class="code-box error" maxlength="1" value="R">
+    </div>
+    <div class="field-error">We couldn't find that code. Check the code on your PC and try again.</div>
+    <button class="btn btn-primary btn-full mt-16">Continue</button>
+    <details class="how-it-works">
+      <summary>How it works</summary>
+      <ol class="instructions-list" style="margin-top:12px">
+        <li>Find the 4-digit code displayed on your PC</li>
+        <li>Enter it above</li>
+        <li>Choose your login provider</li>
+      </ol>
+    </details>
+    <div class="customer-footer">
+      Powered by Borealis<span class="footer-sep">·</span>
+      <a href="#">Terms</a><span class="footer-sep">·</span>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 3 — PROVIDER SELECTION               -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 3 — Provider Selection</h2></div>
+<section class="customer-page">
+  <div class="customer-inner">
+    <div class="event-logo">E</div>
+    <div class="event-name-label">EPIC.LAN 42</div>
+    <h1 class="customer-heading">Sign in to continue</h1>
+    <p class="customer-subtitle">Choose your authentication provider</p>
+    <div class="w-full">
+      <button class="provider-btn provider-steam">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.03 2 11.04c0 2.39 1.02 4.56 2.67 6.18l.03-2.81a3.48 3.48 0 0 1 2.1-2.74L9.66 10.4a2.5 2.5 0 0 1 4.59-.63l2.38.69a3.5 3.5 0 0 1 2.37 3.3c0 .05 0 .1-.01.15A3.5 3.5 0 0 1 15.58 17H14.5l-1.54 1.55c-.18.18-.42.26-.66.24C8.43 19.6 5.2 19.2 3.5 18.1A9.9 9.9 0 0 0 12 22c5.52 0 10-4.03 10-9s-4.48-11-10-11z"/></svg>
+        <span class="provider-label">Sign in with Steam</span>
+      </button>
+      <button class="provider-btn provider-discord">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.93-1.52.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.26a18.27 18.27 0 0 0-5.4 0 12.6 12.6 0 0 0-.62-1.26.07.07 0 0 0-.08-.04A19.74 19.74 0 0 0 3.68 4.37a.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.05 19.9 19.9 0 0 0 5.99 3.03.07.07 0 0 0 .08-.03c.46-.63.87-1.3 1.22-2a.07.07 0 0 0-.04-.1 13.1 13.1 0 0 1-1.87-.9.07.07 0 0 1-.01-.12c.13-.09.25-.19.37-.29a.07.07 0 0 1 .07-.01c3.93 1.79 8.18 1.79 12.07 0a.07.07 0 0 1 .07.01c.12.1.25.2.37.29a.07.07 0 0 1 0 .12c-.6.35-1.22.65-1.88.9a.07.07 0 0 0-.03.1c.36.7.77 1.37 1.22 2a.07.07 0 0 0 .08.03 19.83 19.83 0 0 0 6-3.03.07.07 0 0 0 .04-.05c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>
+        <span class="provider-label">Sign in with Discord</span>
+      </button>
+      <button class="provider-btn provider-twitch">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.57 4.71H13v4.24h-1.43V4.71zm3.93 0h1.43v4.24h-1.43V4.71zM4.71 2 3 5.86v14h4.71v2.57h2.86L13 20h3.57L21 15.57V2H4.71zm14.14 12.86-2.86 2.85h-4.28l-2.5 2.5v-2.5H5.93v-12h12.93v9.15z"/></svg>
+        <span class="provider-label">Sign in with Twitch</span>
+      </button>
+    </div>
+    <p class="code-reassurance">Code: HX4R</p>
+    <div class="customer-footer">
+      Powered by Borealis<span class="footer-sep">·</span>
+      <a href="#">Terms</a><span class="footer-sep">·</span>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 4 — PROVIDER SELECTION — LOADING     -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 4 — Provider Selection — Loading State</h2></div>
+<section class="customer-page">
+  <div class="customer-inner">
+    <div class="event-logo">E</div>
+    <div class="event-name-label">EPIC.LAN 42</div>
+    <h1 class="customer-heading">Sign in to continue</h1>
+    <p class="customer-subtitle">Choose your authentication provider</p>
+    <div class="w-full">
+      <button class="provider-btn provider-steam" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.03 2 11.04c0 2.39 1.02 4.56 2.67 6.18l.03-2.81a3.48 3.48 0 0 1 2.1-2.74L9.66 10.4a2.5 2.5 0 0 1 4.59-.63l2.38.69a3.5 3.5 0 0 1 2.37 3.3c0 .05 0 .1-.01.15A3.5 3.5 0 0 1 15.58 17H14.5l-1.54 1.55c-.18.18-.42.26-.66.24C8.43 19.6 5.2 19.2 3.5 18.1A9.9 9.9 0 0 0 12 22c5.52 0 10-4.03 10-9s-4.48-11-10-11z"/></svg>
+        <span class="provider-label">Sign in with Steam</span>
+      </button>
+      <button class="provider-btn provider-discord loading">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.93-1.52.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.26a18.27 18.27 0 0 0-5.4 0 12.6 12.6 0 0 0-.62-1.26.07.07 0 0 0-.08-.04A19.74 19.74 0 0 0 3.68 4.37a.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.05 19.9 19.9 0 0 0 5.99 3.03.07.07 0 0 0 .08-.03c.46-.63.87-1.3 1.22-2a.07.07 0 0 0-.04-.1 13.1 13.1 0 0 1-1.87-.9.07.07 0 0 1-.01-.12c.13-.09.25-.19.37-.29a.07.07 0 0 1 .07-.01c3.93 1.79 8.18 1.79 12.07 0a.07.07 0 0 1 .07.01c.12.1.25.2.37.29a.07.07 0 0 1 0 .12c-.6.35-1.22.65-1.88.9a.07.07 0 0 0-.03.1c.36.7.77 1.37 1.22 2a.07.07 0 0 0 .08.03 19.83 19.83 0 0 0 6-3.03.07.07 0 0 0 .04-.05c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>
+        <span class="provider-label">Sign in with Discord</span>
+        <span class="provider-loading"><span class="spinner"></span> Redirecting to Discord...</span>
+      </button>
+      <button class="provider-btn provider-twitch" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.57 4.71H13v4.24h-1.43V4.71zm3.93 0h1.43v4.24h-1.43V4.71zM4.71 2 3 5.86v14h4.71v2.57h2.86L13 20h3.57L21 15.57V2H4.71zm14.14 12.86-2.86 2.85h-4.28l-2.5 2.5v-2.5H5.93v-12h12.93v9.15z"/></svg>
+        <span class="provider-label">Sign in with Twitch</span>
+      </button>
+    </div>
+    <p class="code-reassurance">Code: HX4R</p>
+    <div class="customer-footer">
+      Powered by Borealis<span class="footer-sep">·</span>
+      <a href="#">Terms</a><span class="footer-sep">·</span>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 5 — SUCCESS / RETURN                 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 5 — Success / Return</h2></div>
+<section class="customer-page">
+  <div class="customer-inner">
+    <div class="event-logo">E</div>
+    <div class="event-name-label">EPIC.LAN 42</div>
+    <div class="user-avatar-circle">F</div>
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px">FragMaster</div>
+    <h1 class="customer-heading">You're all set</h1>
+    <p class="customer-subtitle">Head back to your PC — you'll be connected automatically.</p>
+    <div class="customer-footer">
+      Powered by Borealis<span class="footer-sep">·</span>
+      <a href="#">Terms</a><span class="footer-sep">·</span>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 6 — ERROR / AUTH FAILED              -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 6 — Error / Auth Failed</h2></div>
+<section class="customer-page">
+  <div class="customer-inner">
+    <div class="event-logo">E</div>
+    <div class="event-name-label">EPIC.LAN 42</div>
+    <div class="status-circle status-error">
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="12" x2="24" y2="24"/><line x1="24" y1="12" x2="12" y2="24"/></svg>
+    </div>
+    <h1 class="customer-heading">Something went wrong</h1>
+    <p class="customer-subtitle">We couldn't verify your identity with Discord. Please try again.</p>
+    <button class="btn btn-primary btn-full mt-16">Try Again</button>
+    <div class="customer-footer">
+      Powered by Borealis<span class="footer-sep">·</span>
+      <a href="#">Terms</a><span class="footer-sep">·</span>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 7 — CODE EXPIRED ERROR               -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 7 — Code Expired Error</h2></div>
+<section class="customer-page">
+  <div class="customer-inner">
+    <div class="event-logo">E</div>
+    <div class="event-name-label">EPIC.LAN 42</div>
+    <div class="status-circle status-warn">
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="18" cy="18" r="12"/><polyline points="18,11 18,19 23,19"/></svg>
+    </div>
+    <h1 class="customer-heading">Code expired</h1>
+    <p class="customer-subtitle">This code is no longer valid. Check your PC for a new code.</p>
+    <button class="btn btn-primary btn-full mt-24">Enter New Code</button>
+    <div class="customer-footer">
+      Powered by Borealis<span class="footer-sep">·</span>
+      <a href="#">Terms</a><span class="footer-sep">·</span>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ██ ADMIN PAGES ██                                             -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 8 — ADMIN LOGIN                      -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 8 — Admin Login</h2></div>
+<section class="admin-login">
+  <div class="login-box">
+    <div class="login-brand">
+      <svg class="sidebar-logo-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="18" r="14"/><path d="M18 4 L18 18 L28 28" stroke-linecap="round"/></svg>
+      <span class="sidebar-logo-text">Borealis</span>
+    </div>
+    <p class="login-subtitle">Admin Dashboard</p>
+
+    <button class="btn-primary-ap" style="width:100%;margin-bottom:12px;padding:10px 16px;gap:10px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Sign in with Aperture SSO
+    </button>
+
+    <div class="login-divider"><span>or</span></div>
+
+    <div class="form-field" style="margin-bottom:16px">
+      <div class="form-field-inner">
+        <label>EMAIL</label>
+        <input type="email" class="form-input" placeholder="admin@example.com">
+      </div>
+    </div>
+    <div class="form-field" style="margin-bottom:24px">
+      <div class="form-field-inner">
+        <label>PASSWORD</label>
+        <input type="password" class="form-input" placeholder="••••••••">
+      </div>
+    </div>
+    <button class="btn-outline-ap" style="width:100%;padding:10px 16px">Sign In</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 9 — ADMIN DASHBOARD                  -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 9 — Admin Dashboard</h2></div>
+<section class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-logo">
+      <svg class="sidebar-logo-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="18" r="14"/><path d="M18 4 L18 18 L28 28" stroke-linecap="round"/></svg>
+      <span class="sidebar-logo-text">Borealis</span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Overview</div>
+        <a class="sidebar-item active" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Management</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Social Providers
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Clients
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Settings</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Theme
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          General
+        </a>
+      </div>
+    </div>
+    <div style="height:1px;background:var(--color-border,var(--divider));margin:8px 16px"></div>
+    <a class="sidebar-item" href="#" style="color:var(--color-danger,var(--down))">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-danger,var(--down))"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </a>
+  </nav>
+  <!-- Right Column -->
+  <div class="admin-right">
+    <header class="admin-header">
+      <div class="admin-breadcrumb">borealis <span>/ Dashboard</span></div>
+      <div class="admin-controls">
+        <span class="admin-user-label">admin@epic.lan</span>
+        <div class="admin-avatar">A</div>
+      </div>
+    </header>
+    <main class="admin-main">
+      <h1 class="page-title">Dashboard</h1>
+
+      <!-- Stat Strip -->
+      <div class="stat-strip">
+        <div class="stat-strip-item">
+          <div class="stat-label"><span class="stat-label-dot" style="background:var(--color-success,var(--up))"></span> AUTHS TODAY</div>
+          <div class="stat-value">127</div>
+        </div>
+        <div class="stat-strip-item">
+          <div class="stat-label"><span class="stat-label-dot" style="background:var(--color-primary,var(--accent))"></span> ACTIVE CODES</div>
+          <div class="stat-value">4</div>
+        </div>
+        <div class="stat-strip-item">
+          <div class="stat-label"><span class="stat-label-dot" style="background:var(--color-info,var(--info))"></span> PROVIDERS</div>
+          <div class="stat-value">3</div>
+          <div class="stat-sub">of 5 enabled</div>
+        </div>
+        <div class="stat-strip-item">
+          <div class="stat-label"><span class="stat-label-dot" style="background:var(--color-warning,var(--warn))"></span> CLIENTS</div>
+          <div class="stat-value">2</div>
+        </div>
+      </div>
+
+      <!-- Recent Authentications -->
+      <div class="section-header">
+        <div class="section-header-inner">
+          <h2>Recent Authentications</h2>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Provider</th>
+            <th>Client</th>
+            <th>Code</th>
+            <th>Status</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cell-main">FragMaster</td>
+            <td class="cell-secondary">Discord</td>
+            <td class="cell-secondary">EPIC.LAN Seats</td>
+            <td class="cell-mono">HX4R</td>
+            <td><span class="status-pill status-pill-success">✓ Successful</span></td>
+            <td class="cell-muted">2 min ago</td>
+          </tr>
+          <tr>
+            <td class="cell-main">NovaStar</td>
+            <td class="cell-secondary">Steam</td>
+            <td class="cell-secondary">EPIC.LAN Seats</td>
+            <td class="cell-mono">R7NW</td>
+            <td><span class="status-pill status-pill-success">✓ Successful</span></td>
+            <td class="cell-muted">5 min ago</td>
+          </tr>
+          <tr>
+            <td class="cell-main">—</td>
+            <td class="cell-secondary">—</td>
+            <td class="cell-secondary">EPIC.LAN Seats</td>
+            <td class="cell-mono">P3KJ</td>
+            <td><span class="status-pill status-pill-warning">⏳ Pending</span></td>
+            <td class="cell-muted">8 min ago</td>
+          </tr>
+          <tr>
+            <td class="cell-main">xVenom</td>
+            <td class="cell-secondary">Twitch</td>
+            <td class="cell-secondary">Tournament Sys</td>
+            <td class="cell-mono">D6WT</td>
+            <td><span class="status-pill status-pill-danger">✕ Failed</span></td>
+            <td class="cell-muted">12 min ago</td>
+          </tr>
+          <tr>
+            <td class="cell-main">CyberPunk99</td>
+            <td class="cell-secondary">Discord</td>
+            <td class="cell-secondary">EPIC.LAN Seats</td>
+            <td class="cell-mono">M2YB</td>
+            <td><span class="status-pill status-pill-success">✓ Successful</span></td>
+            <td class="cell-muted">15 min ago</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 10 — SOCIAL PROVIDERS                -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 10 — Social Providers</h2></div>
+<section class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-logo">
+      <svg class="sidebar-logo-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="18" r="14"/><path d="M18 4 L18 18 L28 28" stroke-linecap="round"/></svg>
+      <span class="sidebar-logo-text">Borealis</span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Overview</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Management</div>
+        <a class="sidebar-item active" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Social Providers
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Clients
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Settings</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Theme
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          General
+        </a>
+      </div>
+    </div>
+  </nav>
+  <!-- Right Column -->
+  <div class="admin-right">
+    <header class="admin-header">
+      <div class="admin-breadcrumb">borealis <span>/ Social Providers</span></div>
+      <div class="admin-controls">
+        <span class="admin-user-label">admin@epic.lan</span>
+        <div class="admin-avatar">A</div>
+      </div>
+    </header>
+    <main class="admin-main">
+      <h1 class="page-title">Social Providers</h1>
+      <p style="font-size:14px;color:var(--color-text-secondary,var(--text-2));margin-bottom:28px">Configure authentication providers that users can sign in with. Enable a provider and enter its API credentials.</p>
+
+      <!-- Provider Card Grid -->
+      <div class="provider-card-grid">
+        <!-- Steam — enabled -->
+        <div class="provider-card">
+          <div class="provider-card-icon" style="background:#171a21;color:#c7d5e0">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.03 2 11.04c0 2.39 1.02 4.56 2.67 6.18l.03-2.81a3.48 3.48 0 0 1 2.1-2.74L9.66 10.4a2.5 2.5 0 0 1 4.59-.63l2.38.69a3.5 3.5 0 0 1 2.37 3.3c0 .05 0 .1-.01.15A3.5 3.5 0 0 1 15.58 17H14.5l-1.54 1.55c-.18.18-.42.26-.66.24C8.43 19.6 5.2 19.2 3.5 18.1A9.9 9.9 0 0 0 12 22c5.52 0 10-4.03 10-9s-4.48-11-10-11z"/></svg>
+          </div>
+          <div class="provider-card-info">
+            <div class="provider-card-name">Steam</div>
+            <div class="provider-card-state" style="color:var(--color-success,var(--up))">Enabled · API key set</div>
+          </div>
+          <div class="provider-card-actions">
+            <a class="provider-card-link" href="#">Configure</a>
+            <button class="toggle-switch on"></button>
+          </div>
+        </div>
+        <!-- Discord — enabled -->
+        <div class="provider-card">
+          <div class="provider-card-icon" style="background:#5865F2;color:white">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.93-1.52.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.26a18.27 18.27 0 0 0-5.4 0 12.6 12.6 0 0 0-.62-1.26.07.07 0 0 0-.08-.04A19.74 19.74 0 0 0 3.68 4.37a.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.05 19.9 19.9 0 0 0 5.99 3.03.07.07 0 0 0 .08-.03c.46-.63.87-1.3 1.22-2a.07.07 0 0 0-.04-.1 13.1 13.1 0 0 1-1.87-.9.07.07 0 0 1-.01-.12c.13-.09.25-.19.37-.29a.07.07 0 0 1 .07-.01c3.93 1.79 8.18 1.79 12.07 0a.07.07 0 0 1 .07.01c.12.1.25.2.37.29a.07.07 0 0 1 0 .12c-.6.35-1.22.65-1.88.9a.07.07 0 0 0-.03.1c.36.7.77 1.37 1.22 2a.07.07 0 0 0 .08.03 19.83 19.83 0 0 0 6-3.03.07.07 0 0 0 .04-.05c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>
+          </div>
+          <div class="provider-card-info">
+            <div class="provider-card-name">Discord</div>
+            <div class="provider-card-state" style="color:var(--color-success,var(--up))">Enabled · OAuth2 configured</div>
+          </div>
+          <div class="provider-card-actions">
+            <a class="provider-card-link" href="#">Configure</a>
+            <button class="toggle-switch on"></button>
+          </div>
+        </div>
+        <!-- Twitch — enabled -->
+        <div class="provider-card">
+          <div class="provider-card-icon" style="background:#9146FF;color:white">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.57 4.71H13v4.24h-1.43V4.71zm3.93 0h1.43v4.24h-1.43V4.71zM4.71 2 3 5.86v14h4.71v2.57h2.86L13 20h3.57L21 15.57V2H4.71zm14.14 12.86-2.86 2.85h-4.28l-2.5 2.5v-2.5H5.93v-12h12.93v9.15z"/></svg>
+          </div>
+          <div class="provider-card-info">
+            <div class="provider-card-name">Twitch</div>
+            <div class="provider-card-state" style="color:var(--color-success,var(--up))">Enabled · OAuth2 configured</div>
+          </div>
+          <div class="provider-card-actions">
+            <a class="provider-card-link" href="#">Configure</a>
+            <button class="toggle-switch on"></button>
+          </div>
+        </div>
+        <!-- Authentik — disabled -->
+        <div class="provider-card">
+          <div class="provider-card-icon" style="background:var(--color-surface-hover,var(--surface-2));color:var(--color-text-muted,var(--text-3))">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="provider-card-info">
+            <div class="provider-card-name" style="color:var(--color-text-muted,var(--text-3))">Authentik</div>
+            <div class="provider-card-state">Disabled</div>
+          </div>
+          <div class="provider-card-actions">
+            <a class="provider-card-link" href="#">Configure</a>
+            <button class="toggle-switch"></button>
+          </div>
+        </div>
+        <!-- Laravel Passport — disabled -->
+        <div class="provider-card">
+          <div class="provider-card-icon" style="background:var(--color-surface-hover,var(--surface-2));color:var(--color-text-muted,var(--text-3))">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="provider-card-info">
+            <div class="provider-card-name" style="color:var(--color-text-muted,var(--text-3))">Laravel Passport</div>
+            <div class="provider-card-state">Disabled</div>
+          </div>
+          <div class="provider-card-actions">
+            <a class="provider-card-link" href="#">Configure</a>
+            <button class="toggle-switch"></button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 11 — CLIENTS LIST                    -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 11 — Clients</h2></div>
+<section class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-logo">
+      <svg class="sidebar-logo-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="18" r="14"/><path d="M18 4 L18 18 L28 28" stroke-linecap="round"/></svg>
+      <span class="sidebar-logo-text">Borealis</span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Overview</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Management</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Social Providers
+        </a>
+        <a class="sidebar-item active" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Clients
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Settings</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Theme
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          General
+        </a>
+      </div>
+    </div>
+  </nav>
+  <!-- Right Column -->
+  <div class="admin-right">
+    <header class="admin-header">
+      <div class="admin-breadcrumb">borealis <span>/ Clients</span></div>
+      <div class="admin-controls">
+        <span class="admin-user-label">admin@epic.lan</span>
+        <div class="admin-avatar">A</div>
+      </div>
+    </header>
+    <main class="admin-main">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+        <h1 class="page-title" style="margin-bottom:0">Clients</h1>
+        <button class="btn-primary-ap" style="gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Client
+        </button>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Client ID</th>
+            <th>Status</th>
+            <th>Auths (24h)</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="clickable">
+            <td><a class="cell-link" href="#">EPIC.LAN Seats</a></td>
+            <td class="cell-mono">bor_cl_e7f3a2b1c9d4</td>
+            <td><span class="status-pill status-pill-success">✓ Active</span></td>
+            <td class="cell-secondary">124</td>
+            <td class="cell-muted">2024-11-15</td>
+          </tr>
+          <tr class="clickable">
+            <td><a class="cell-link" href="#">Tournament System</a></td>
+            <td class="cell-mono">bor_cl_9k2m4p7x1w3q</td>
+            <td><span class="status-pill status-pill-success">✓ Active</span></td>
+            <td class="cell-secondary">3</td>
+            <td class="cell-muted">2025-01-08</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 12 — CLIENT DETAIL                   -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 12 — Client Detail</h2></div>
+<section class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-logo">
+      <svg class="sidebar-logo-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="18" r="14"/><path d="M18 4 L18 18 L28 28" stroke-linecap="round"/></svg>
+      <span class="sidebar-logo-text">Borealis</span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Overview</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Management</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Social Providers
+        </a>
+        <a class="sidebar-item active" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Clients
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Settings</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Theme
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          General
+        </a>
+      </div>
+    </div>
+  </nav>
+  <!-- Right Column -->
+  <div class="admin-right">
+    <header class="admin-header">
+      <div class="admin-breadcrumb">borealis / Clients <span>/ EPIC.LAN Seats</span></div>
+      <div class="admin-controls">
+        <span class="admin-user-label">admin@epic.lan</span>
+        <div class="admin-avatar">A</div>
+      </div>
+    </header>
+    <main class="admin-main">
+      <h1 class="page-title">EPIC.LAN Seats</h1>
+
+      <!-- Metadata Strip -->
+      <div class="metadata-strip">
+        <div class="metadata-item">
+          <div class="metadata-label">STATUS</div>
+          <div class="metadata-value"><span class="status-pill status-pill-success">✓ Active</span></div>
+        </div>
+        <div class="metadata-item">
+          <div class="metadata-label">CREATED</div>
+          <div class="metadata-value" style="font-family:var(--font-mono);font-size:13px">2024-11-15 14:32</div>
+        </div>
+        <div class="metadata-item">
+          <div class="metadata-label">AUTHS (24H)</div>
+          <div class="metadata-value">124</div>
+        </div>
+        <div class="metadata-item">
+          <div class="metadata-label">AUTHS (TOTAL)</div>
+          <div class="metadata-value">3,847</div>
+        </div>
+      </div>
+
+      <!-- Credentials -->
+      <div class="section-header">
+        <div class="section-header-inner">
+          <h2>Credentials</h2>
+        </div>
+      </div>
+      <div style="margin-bottom:32px">
+        <div class="credential-row">
+          <span class="credential-label">CLIENT ID</span>
+          <span class="credential-value">bor_cl_e7f3a2b1c9d4</span>
+          <div class="credential-actions">
+            <button class="btn-outline-ap btn-sm-ap">Copy</button>
+          </div>
+        </div>
+        <div class="credential-row">
+          <span class="credential-label">CLIENT SECRET</span>
+          <span class="credential-value">••••••••••••••••••••••••</span>
+          <div class="credential-actions">
+            <button class="btn-outline-ap btn-sm-ap">Reveal</button>
+            <button class="btn-outline-ap btn-sm-ap">Copy</button>
+          </div>
+        </div>
+        <div class="credential-row" style="border-bottom:none">
+          <span class="credential-label">REDIRECT URI</span>
+          <span class="credential-value">https://seats.epic.lan/auth/borealis/callback</span>
+          <div class="credential-actions">
+            <button class="btn-outline-ap btn-sm-ap">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configuration Form -->
+      <div class="section-header">
+        <div class="section-header-inner">
+          <h2>Configuration</h2>
+        </div>
+      </div>
+      <div style="max-width:600px">
+        <div class="form-field">
+          <div class="form-field-inner">
+            <label>CLIENT NAME <span class="required">*</span></label>
+            <input type="text" class="form-input" value="EPIC.LAN Seats">
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="form-field-inner">
+            <label>REDIRECT URI <span class="required">*</span></label>
+            <input type="text" class="form-input" value="https://seats.epic.lan/auth/borealis/callback">
+          </div>
+          <div class="form-hint">The URL to redirect users after authentication.</div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:8px">
+          <button class="btn-primary-ap">Save Changes</button>
+          <button class="btn-outline-ap">Regenerate Secret</button>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="danger-zone">
+        <div class="section-header">
+          <div class="section-header-inner">
+            <h2 style="color:var(--color-danger,var(--down))">Danger Zone</h2>
+          </div>
+        </div>
+        <p class="danger-zone-desc">Deleting this client will immediately revoke all active sessions and device codes. This cannot be undone.</p>
+        <button class="btn-danger-ap">Delete Client</button>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 13 — THEME SETTINGS                  -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 13 — Settings: Theme</h2></div>
+<section class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-logo">
+      <svg class="sidebar-logo-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="18" r="14"/><path d="M18 4 L18 18 L28 28" stroke-linecap="round"/></svg>
+      <span class="sidebar-logo-text">Borealis</span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Overview</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Management</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Social Providers
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Clients
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Settings</div>
+        <a class="sidebar-item active" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Theme
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          General
+        </a>
+      </div>
+    </div>
+  </nav>
+  <!-- Right Column -->
+  <div class="admin-right">
+    <header class="admin-header">
+      <div class="admin-breadcrumb">borealis / Settings <span>/ Theme</span></div>
+      <div class="admin-controls">
+        <span class="admin-user-label">admin@epic.lan</span>
+        <div class="admin-avatar">A</div>
+      </div>
+    </header>
+    <main class="admin-main">
+      <!-- Settings Layout: subnav + content -->
+      <div class="settings-layout">
+        <nav class="settings-subnav">
+          <div class="settings-subnav-group">
+            <div class="settings-subnav-label">Appearance</div>
+            <a class="settings-subnav-item active" href="#">Theme</a>
+          </div>
+          <div class="settings-subnav-group">
+            <div class="settings-subnav-label">General</div>
+            <a class="settings-subnav-item" href="#">General</a>
+          </div>
+        </nav>
+        <div class="settings-content">
+          <h1 class="page-title">Theme</h1>
+          <p style="font-size:14px;color:var(--color-text-secondary,var(--text-2));margin-bottom:28px">Customise the look and feel of the customer-facing pages.</p>
+
+          <!-- Accent Colour -->
+          <div class="form-field">
+            <div class="form-field-inner">
+              <label>ACCENT COLOUR</label>
+              <div class="accent-swatches">
+                <button class="accent-swatch" style="background:oklch(70% 0.18 350)" title="Pink"></button>
+                <button class="accent-swatch" style="background:oklch(70% 0.18 20)" title="Coral"></button>
+                <button class="accent-swatch selected" style="background:oklch(70% 0.18 55)" title="Tangerine"></button>
+                <button class="accent-swatch" style="background:oklch(70% 0.18 135)" title="Lime"></button>
+                <button class="accent-swatch" style="background:oklch(70% 0.18 185)" title="Teal"></button>
+                <button class="accent-swatch" style="background:oklch(70% 0.18 230)" title="Sky"></button>
+                <button class="accent-swatch" style="background:oklch(70% 0.18 295)" title="Violet"></button>
+                <button class="accent-swatch" style="background:oklch(70% 0.18 325)" title="Magenta"></button>
+              </div>
+              <input type="range" class="hue-slider" min="0" max="360" value="55">
+              <div class="hue-label">Hue: 55°</div>
+            </div>
+          </div>
+
+          <!-- Mode -->
+          <div class="form-field">
+            <div class="form-field-inner">
+              <label>MODE</label>
+              <div class="mode-toggle">
+                <button class="mode-toggle-btn selected">Dark</button>
+                <button class="mode-toggle-btn">Light</button>
+                <button class="mode-toggle-btn">System</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Site Title -->
+          <div class="form-field">
+            <div class="form-field-inner">
+              <label>SITE TITLE <span class="optional">(optional)</span></label>
+              <input type="text" class="form-input" placeholder="Borealis" value="EPIC.LAN 42">
+            </div>
+            <div class="form-hint">Shown on customer-facing pages alongside the event logo.</div>
+          </div>
+
+          <!-- Custom CSS -->
+          <div class="form-field">
+            <div class="form-field-inner">
+              <label>CUSTOM CSS <span class="optional">(optional)</span></label>
+              <textarea class="form-input" rows="8" placeholder="/* Custom CSS overrides */">/* Event-specific overrides */
+:root {
+  --bg: oklch(11% 0.008 240);
+}</textarea>
+            </div>
+            <div class="form-hint">Injected into customer-facing pages only. Use CSS custom properties to override theme values.</div>
+          </div>
+
+          <button class="btn-primary-ap">Save Changes</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 14 — GENERAL SETTINGS                -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 14 — Settings: General</h2></div>
+<section class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-logo">
+      <svg class="sidebar-logo-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="18" r="14"/><path d="M18 4 L18 18 L28 28" stroke-linecap="round"/></svg>
+      <span class="sidebar-logo-text">Borealis</span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Overview</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Management</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Social Providers
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Clients
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-section-label">Settings</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Theme
+        </a>
+        <a class="sidebar-item active" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          General
+        </a>
+      </div>
+    </div>
+  </nav>
+  <!-- Right Column -->
+  <div class="admin-right">
+    <header class="admin-header">
+      <div class="admin-breadcrumb">borealis / Settings <span>/ General</span></div>
+      <div class="admin-controls">
+        <span class="admin-user-label">admin@epic.lan</span>
+        <div class="admin-avatar">A</div>
+      </div>
+    </header>
+    <main class="admin-main">
+      <!-- Settings Layout: subnav + content -->
+      <div class="settings-layout">
+        <nav class="settings-subnav">
+          <div class="settings-subnav-group">
+            <div class="settings-subnav-label">Appearance</div>
+            <a class="settings-subnav-item" href="#">Theme</a>
+          </div>
+          <div class="settings-subnav-group">
+            <div class="settings-subnav-label">General</div>
+            <a class="settings-subnav-item active" href="#">General</a>
+          </div>
+        </nav>
+        <div class="settings-content">
+          <h1 class="page-title">General</h1>
+          <p style="font-size:14px;color:var(--color-text-secondary,var(--text-2));margin-bottom:28px">Configure general settings for the Borealis instance.</p>
+
+          <div style="max-width:600px">
+            <!-- Site Name -->
+            <div class="form-field">
+              <div class="form-field-inner">
+                <label>SITE NAME <span class="required">*</span></label>
+                <input type="text" class="form-input" value="EPIC.LAN 42">
+              </div>
+              <div class="form-hint">The event or site name shown on customer pages and in the admin header.</div>
+            </div>
+
+            <!-- Device Code Expiry -->
+            <div class="form-field">
+              <div class="form-field-inner">
+                <label>DEVICE CODE EXPIRY <span class="optional">(seconds)</span></label>
+                <input type="number" class="form-input" value="300" style="max-width:160px">
+              </div>
+              <div class="form-hint">How long a device code remains valid. Default: 300 (5 minutes).</div>
+            </div>
+
+            <!-- Terms URL -->
+            <div class="section-header" style="margin-top:32px">
+              <div class="section-header-inner">
+                <h2>Legal Links</h2>
+              </div>
+            </div>
+            <p style="font-size:13px;color:var(--color-text-muted,var(--text-3));margin-bottom:20px">These links appear in the customer-facing page footer. Leave empty to hide them.</p>
+
+            <div class="form-field">
+              <div class="form-field-inner">
+                <label>TERMS OF SERVICE URL <span class="optional">(optional)</span></label>
+                <input type="url" class="form-input" placeholder="https://example.com/terms" value="https://epic.lan/terms">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <div class="form-field-inner">
+                <label>PRIVACY POLICY URL <span class="optional">(optional)</span></label>
+                <input type="url" class="form-input" placeholder="https://example.com/privacy" value="https://epic.lan/privacy">
+              </div>
+            </div>
+
+            <button class="btn-primary-ap" style="margin-top:8px">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 15 — MOBILE VIEWPORT PREVIEW         -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page-separator"><h2>Page 15 — Mobile Viewport Preview</h2></div>
+<section class="mobile-frame-wrapper">
+  <div class="mobile-frame-label">iPhone 14 Pro — 375 × 812 · Code Entry</div>
+  <div class="mobile-frame">
+    <div class="mobile-notch"><div class="notch-pill"></div></div>
+    <div class="mobile-content">
+      <div class="event-logo">E</div>
+      <div class="event-name-label">EPIC.LAN 42</div>
+      <h1 class="customer-heading">Enter your code</h1>
+      <p class="customer-subtitle">Find the code shown on your PC screen</p>
+      <div class="code-inputs">
+        <input type="text" class="code-box" maxlength="1" placeholder="·">
+        <input type="text" class="code-box" maxlength="1" placeholder="·">
+        <input type="text" class="code-box" maxlength="1" placeholder="·">
+        <input type="text" class="code-box" maxlength="1" placeholder="·">
+      </div>
+      <button class="btn btn-primary btn-full">Continue</button>
+      <details class="how-it-works">
+        <summary>How it works</summary>
+        <ol class="instructions-list" style="margin-top:12px">
+          <li>Find the 4-digit code displayed on your PC</li>
+          <li>Enter it above</li>
+          <li>Choose your login provider</li>
+        </ol>
+      </details>
+      <div class="customer-footer">
+        Powered by Borealis<span class="footer-sep">·</span>
+        <a href="#">Terms</a><span class="footer-sep">·</span>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
